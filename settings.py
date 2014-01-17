@@ -1,17 +1,21 @@
 import os, sys
 
-
+DEBUG = True
 # ===========================
 # = Directory Declaractions =
 # ===========================
 
 PROJECT_PATH 		= os.path.dirname(os.path.abspath(__file__))
 CURRENT_DIR   		= os.path.dirname(__file__)
-TEMPLATE_DIRS 		= (os.path.join(CURRENT_DIR, 'templates'),)
-STATICFILES_DIRS 	= (os.path.join(CURRENT_DIR, 'static'),)
+TEMPLATE_DIRS 		= (
+	os.path.join(CURRENT_DIR, 'templates'),
+	"/home/philippe/workspace/quidprize/templates",)
+STATICFILES_DIRS	= (
+	"/home/philippe/workspace/quidprize/media",
+	"/home/philippe/workspace/quidprize/static",
+)
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+SESSION_COOKIE_AGE = 1200 # 20 mins in seconds
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -21,11 +25,11 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
+       'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'test',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -55,9 +59,9 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = '/home/philippe/workspace/quidprize/media/'
 MEDIA_URL = 'media/'
-STATIC_ROOT = 'static/'
+STATIC_ROOT = '/home/philippe/workspace/quidprize/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -100,10 +104,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.qp',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
 )
 
 
