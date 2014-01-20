@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     
 	url(r'^business/', 'apps.qp.views.business'),
+	url(r'^$','apps.qp.views.index'),
 	# url(r'^thanks/','apps.qp.views.thanks'),   
 
     # Uncomment the admin/doc line below to enable admin documentation:

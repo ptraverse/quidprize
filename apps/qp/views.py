@@ -15,6 +15,9 @@ from django.shortcuts import HttpResponseRedirect
 
 from apps.qp.forms import BusinessForm
 
+def index(request):
+	return render(request, 'index.html' )
+
 def business(request):
 	if request.method == 'POST': # If the form has been submitted...
         	form = BusinessForm(request.POST) # A form bound to the POST data
