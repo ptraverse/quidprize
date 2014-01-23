@@ -1,4 +1,5 @@
-import os, sys
+import os, sys, socket
+
 
 DEBUG = True
 # ===========================
@@ -13,12 +14,13 @@ TEMPLATE_DIRS 		= (
 STATICFILES_DIRS	= (
 	"/home/philippe/workspace/quidprize/media",
 	"/home/philippe/workspace/quidprize/static",
+	"/home/philippe/workspace/quidprize/static/images/",
 )
 
-SESSION_COOKIE_AGE = 1200 # 20 mins in seconds
+SESSION_COOKIE_AGE = 8
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    # ('Philippe Traverse', 'philippe.traverse@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -26,7 +28,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'test',                      # Or path to database file if using sqlite3.
+        'NAME': 'quidprize',                      # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -41,7 +43,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Vancouver'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -94,7 +96,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'quidprize.urls'
+ROOT_URLCONF = 'urls'
 
 
 INSTALLED_APPS = (
@@ -130,6 +132,9 @@ LOGGING = {
     }
 }
 
+if socket.gethostname() == 'ubuntuLVM':
+	from local_settings_development import *
+else:
+	from local_settings import *
 
-from local_settings import *
 

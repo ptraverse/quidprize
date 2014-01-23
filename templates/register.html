@@ -1,0 +1,32 @@
+{% include "base.html" %}
+<br><br>
+{% include "header.html" %}
+<br><br>
+<!--<form method="POST" action="" class="pure-form">-->
+    <!--{% csrf_token %}-->
+    <!--{{userform}}-->
+    <!--{{businessform}}-->
+    <!--<input type="submit">-->
+<!--</form>-->
+
+<form method="POST" action="" class="pure-form" style="text-align: center;" >{% csrf_token %}
+
+    <fieldset class="pure-group"><center>
+        <legend class="pure-legend" >Individual</legend>
+        <input class="pure-input-1-4" id="id_username" type="text" name="username" maxlength="30" placeholder="Email"/>
+        <input class="pure-input-1-4" id="id_username_confirm" type="text" name="username" maxlength="30" placeholder="Confirm Email"/><span class="helptext">Required. 30 characters or fewer. Letters, numbers and @/./+/-/_ characters</span>
+
+        <input class="pure-input-1-4" id="id_password" type="text" name="password" maxlength="128" placeholder="Password"/>
+        <input class="pure-input-1-4" id="id_password_confirm" type="text" name="password" maxlength="128" placeholder="Confirm Password"/><span class="helptext">Use '[algo]$[salt]$[hexdigest]' or use the <a href="password/">change password form</a>.</span>
+        <br>
+    <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
+        <br><br>
+        <br><br>
+        <legend class="pure-legend" >Business</legend>
+        <input class="pure-input-1-4" id="id_contact_person" type="text" name="contact_person" maxlength="64" placeholder="Contact Person" />
+        <input class="pure-input-1-4" id="id_contact_phone" type="text" name="contact_phone" maxlength="12" placeholder="Contact Phone" />
+        <br>
+    <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
+
+    </center></fieldset>
+</form>

@@ -1,37 +1,24 @@
 {% include "base.html" %}
-<br><br>
-<form id="sign_in" class="pure-form" style="text-align: center;">
-    <legend>Sign In</legend>	
-   
-    <fieldset class="pure-group">
-<center>
-	<input type="email" id="sign_in_email" class="pure-input-1-2" placeholder="Email" style="text-align: center;">
-        <input type="password" id="sign_in_password" class="pure-input-1-2" placeholder="Password" style="text-align: center;">
-</center>   
-     </fieldset>
 
+<br><br><br>
+<br><br><br>
+{% include "header.html" %}
+<br><br><br>
+<br><br><br>
+<form action="/log_in/" method="post" id="log_in" class="pure-form" style="text-align: center;" >{% csrf_token %}
 
-<!--
-    <button type="submit" class="pure-button pure-input-1-2 pure-button-bw">Sign In</button>
-</form>
-    
-<br><br><br><br>
-
-<form id="sign_up" class="pure-form" style="text-align: center;">
-    <legend>Sign Up</legend>        
-   
     <fieldset class="pure-group"><center>
-        <input type="email" id="sign_up_email" class="pure-input-1-2" placeholder="Email" style="text-align: center;">
-	<input type="email" id="sign_up_email_confirm" class="pure-input-1-2" placeholder="Confirm Email" style="text-align: center;">
-        <input type="password" id="sign_up_password" class="pure-input-1-2" placeholder="Password" style="text-align: center;">
-  <input type="password" id="sign_up_password_confirm" class="pure-input-1-2" placeholder="Confirm Password" style="text-align: center;">
-</center>   
-     </fieldset>
+	    <input type="email" id="log_in_email" class="pure-input-1-4" placeholder="Email" style="text-align: center;">
+        <input type="password" id="log_in_password" class="pure-input-1-4" placeholder="Password" style="text-align: center;">
+    </center></fieldset>
 
-
-    <button type="submit" class="pure-button pure-input-1-2 pure-button-bw">Sign Up</button>
+    <button type="submit" class="pure-button pure-input-1-4 ">Log In</button>
 </form>
--->
+
+
+
+
 
 <div style="position: absolute; bottom: 0; height: 40px; margin-top: 40px; margin-left: auto; margin-right: auto; width:100%; text-align: center;">&copy; P. Traverse 2014</div>
+
 </body>

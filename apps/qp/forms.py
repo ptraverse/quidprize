@@ -1,8 +1,14 @@
 from django import forms
-from apps.qp.models import Business
+from apps.qp.models import Business, User
 
 class BusinessForm(forms.ModelForm):
 	class Meta:
 		model = Business
 		fields = ['auth_user','name','contact_person','contact_phone']
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','email','password']
 
