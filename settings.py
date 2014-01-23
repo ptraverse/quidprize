@@ -1,7 +1,7 @@
 import os, sys, socket
 
 
-DEBUG = True
+DEBUG = False
 # ===========================
 # = Directory Declaractions =
 # ===========================
@@ -63,7 +63,7 @@ USE_L10N = True
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = '/home/philippe/workspace/quidprize/media/'
 MEDIA_URL = 'media/'
-STATIC_ROOT = '/home/philippe/workspace/quidprize/'
+STATIC_ROOT = '/home/philippe/workspace/quidprize/static'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -133,7 +133,7 @@ LOGGING = {
 }
 
 if socket.gethostname() == 'ubuntuLVM':
-	from local_settings_development import *
+	from local_settings_staging import *
 else:
 	from local_settings import *
 
