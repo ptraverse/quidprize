@@ -8,7 +8,11 @@ class BusinessForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+    username_confirm = forms.CharField()
+    password_confirm = forms.CharField()
     class Meta:
         model = User
-        fields = ['username','email','password']
+        fields = ['username','password']
+        
+        
 

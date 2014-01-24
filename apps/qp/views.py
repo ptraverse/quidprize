@@ -52,7 +52,7 @@ def log_out(request):
 def register(request):
     if request.method == 'POST':
         # ...
-        return render(request, '/')
+        return HttpResponseRedirect('/')
     else:
         uf = UserForm()
         bf = BusinessForm()
