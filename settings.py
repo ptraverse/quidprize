@@ -12,10 +12,17 @@ TEMPLATE_DIRS 		= (
 	os.path.join(CURRENT_DIR, 'templates'),
 	"/home/philippe/workspace/quidprize/templates",)
 STATICFILES_DIRS	= (
-	"/home/philippe/workspace/quidprize/media",
-	"/home/philippe/workspace/quidprize/static",
+	"/home/philippe/workspace/quidprize/static/",
+	"/home/philippe/workspace/quidprize/static/css/",
 	"/home/philippe/workspace/quidprize/static/images/",
+        "/home/philippe/workspace/quidprize/templates/",
 )
+STATIC_ROOT = '/home/philippe/workspace/quidprize/media'
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = '/static/'
+
 
 SESSION_COOKIE_AGE = 8
 
@@ -63,11 +70,7 @@ USE_L10N = True
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = '/home/philippe/workspace/quidprize/media/'
 MEDIA_URL = 'media/'
-STATIC_ROOT = '/home/philippe/workspace/quidprize/static'
 
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -133,7 +136,7 @@ LOGGING = {
 }
 
 if socket.gethostname() == 'ubuntuLVM':
-	from local_settings_staging import *
+	from local_settings_development import *
 else:
 	from local_settings import *
 
