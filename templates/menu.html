@@ -1,0 +1,28 @@
+{% include "base.html" %}
+
+<div class="pure-menu pure-menu-open " style="background: none repeat scroll 0 0; position: fixed; width: 160px; top:0;bottom:0; background-color: #E6E6E6; font-color: white;  ">
+
+    <div style="background-color: #E6E6E6; text-align: center; height:40px; ">
+        <a href="/">
+            <img src="/static/images/qptransp.png" style="height: 40px; padding-top: 4px;">
+        </a>
+    </div>
+
+    <ul>
+        <li class="pure-menu-heading" style="padding-top: 12px; padding-bottom: 12px;"><center>{{ request.user.email }}</center></li>
+        <li><a href="../links/">Links</a></li>
+        <li><a href="../raffles/" class="pure-menu-disabled">Raffles</a></li>
+        <li><a href="../u-stats/">Stats</a></li>
+
+
+        {% if business %}
+        <li class="pure-menu-heading">{{ business.name }}</li>
+        <li><a href="../create-raffle/">Create Raffle</a></li>
+        <li><a href="../b-stats">Stats</a></li>
+        <li><a href="../raffles">Raffles</a></li>
+        {% endif %}
+
+        <li class="pure-menu-heading"></li>
+        <li><a href="../log_out/">Log Out</a></li>
+    </ul>
+</div>

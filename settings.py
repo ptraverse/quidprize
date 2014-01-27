@@ -1,6 +1,7 @@
 import os, sys, socket
 
 
+
 DEBUG = False
 # ===========================
 # = Directory Declaractions =
@@ -9,13 +10,13 @@ DEBUG = False
 PROJECT_PATH 		= os.path.dirname(os.path.abspath(__file__))
 CURRENT_DIR   		= os.path.dirname(__file__)
 TEMPLATE_DIRS 		= (
-	os.path.join(CURRENT_DIR, 'templates'),
-	"/home/philippe/workspace/quidprize/templates",)
+    os.path.join(CURRENT_DIR, 'templates'),
+    "/home/philippe/workspace/quidprize/templates",)
 STATICFILES_DIRS	= (
-	"/home/philippe/workspace/quidprize/static/",
-	"/home/philippe/workspace/quidprize/static/css/",
-	"/home/philippe/workspace/quidprize/static/images/",
-        "/home/philippe/workspace/quidprize/templates/",
+    "/home/philippe/workspace/quidprize/static/",
+    "/home/philippe/workspace/quidprize/static/css/",
+    "/home/philippe/workspace/quidprize/static/images/",
+    "/home/philippe/workspace/quidprize/templates/",
 )
 STATIC_ROOT = '/home/philippe/workspace/quidprize/media'
 
@@ -24,7 +25,7 @@ STATIC_ROOT = '/home/philippe/workspace/quidprize/media'
 STATIC_URL = '/static/'
 
 
-SESSION_COOKIE_AGE = 8
+SESSION_COOKIE_AGE = 600 #10mins in seconds
 
 ADMINS = (
     # ('Philippe Traverse', 'philippe.traverse@gmail.com'),
@@ -101,12 +102,18 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+  # ...
+  'django.core.context_processors.request',
+  'django.contrib.messages.context_processors.messages',
+  'django.contrib.auth.context_processors.auth',
+  # ...
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.qp',
@@ -115,6 +122,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+
 )
 
 

@@ -6,7 +6,6 @@ class BusinessForm(forms.ModelForm):
 		model = Business
 		fields = ['auth_user','name','contact_person','contact_phone']
 
-
 class UserForm(forms.ModelForm):
     username_confirm = forms.CharField()
     password_confirm = forms.CharField()

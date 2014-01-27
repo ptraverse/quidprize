@@ -1,3 +1,5 @@
+
+
 {% include "base.html" %}
 {% load widget_tweaks %}
 <br><br>
@@ -10,8 +12,8 @@
         <legend class="pure-legend" >Individual</legend>
 		{{ userform.username|attr:"class:pure-input-1-4"|attr:"placeholder:Email" }}
 		{{ userform.username_confirm|attr:"class:pure-input-1-4"|attr:"placeholder:Email Confirm" }}
-		{{ userform.password|attr:"class:pure-input-1-4"|attr:"placeholder:Password" }}
-		{{ userform.password_confirm|attr:"class:pure-input-1-4"|attr:"placeholder:Password Confirm" }}
+		{{ userform.password|attr:"type:password"|attr:"class:pure-input-1-4"|attr:"placeholder:Password" }}
+		{{ userform.password_confirm|attr:"type:password"|attr:"class:pure-input-1-4"|attr:"placeholder:Password Confirm" }}
 		
 		
     <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
@@ -23,7 +25,7 @@
         {{ businessform.name|attr:"class:pure-input-1-4"|attr:"placeholder:Name" }}
         {{ businessform.contact_person|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Person" }}
         {{ businessform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Phone" }}        
-        
+        	
         
     <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
 

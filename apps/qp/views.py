@@ -31,7 +31,8 @@ def log_in(request):
     if request.method == 'POST':
         login_email = request.POST.get("log_in_email","")
         login_password = request.POST.get("log_in_password","")
-        user = authenticate(username=login_email, password=login_password)
+        username = User.objects.get(email=login_email)
+        user = authenticate(username=username, password=login_password)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -39,7 +40,6 @@ def log_in(request):
             else:
                 return HttpResponseRedirect('../reset-password')
         else:
-            print("user DNE")
             return HttpResponseRedirect('../register')
     else:
         print("request not POST!!")
@@ -51,7 +51,13 @@ def log_out(request):
 
 def register(request):
     if request.method == 'POST':
-        # ...
+        uf = UserForm(request.POST, prefix='user')
+        bf = BusinessForm(request.POST, prefix='business')
+        if uf.is_valid() * bf.is_valid():
+            user = uf.save()
+            business = bf.save(commit=False)
+            business.user = user
+            business.save()            
         return HttpResponseRedirect('/')
     else:
         uf = UserForm()
@@ -59,8 +65,8 @@ def register(request):
         return render(request, 'register.html', {'userform':uf , 'businessform':bf } )
 
 def index(request):
-    return render(request, 'index.html' )
-    # if request.user:
-    #     return render(request, 'user_home.html')
-    # else:
-	 #    return render(request, 'index.html' )
+    if not request.user.is_authenticated():
+        return render(request, 'index.html')
+    else:
+        return render(request, 'user_home.html', {'request_user':request.user } )
+

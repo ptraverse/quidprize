@@ -5,11 +5,11 @@
 {% include "header.html" %}
 <br><br><br>
 <br><br><br>
-<form action="/log_in/" method="post" id="log_in" class="pure-form" style="text-align: center;" >{% csrf_token %}
+<form action="/log_in/" method="POST" id="log_in" class="pure-form" style="text-align: center;" >{% csrf_token %}
 
     <fieldset class="pure-group"><center>
-	    <input type="email" id="log_in_email" class="pure-input-1-4" placeholder="Email" style="text-align: center;">
-        <input type="password" id="log_in_password" class="pure-input-1-4" placeholder="Password" style="text-align: center;">
+	    <input type="email" name="log_in_email" id="log_in_email" class="pure-input-1-4" placeholder="Email" style="text-align: center;">
+        <input type="password" name="log_in_password" id="log_in_password" class="pure-input-1-4" placeholder="Password" style="text-align: center;">
     </center></fieldset>
 
     <button type="submit" class="pure-button pure-input-1-4 ">Log In</button>
@@ -19,6 +19,9 @@
 
 
 
-<div style="position: absolute; bottom: 0; height: 40px; margin-top: 40px; margin-left: auto; margin-right: auto; width:100%; text-align: center;">&copy; P. Traverse 2014</div>
+<br><br>
+<br><br><br><br>
+<br><br><br><br>
+<div style="height: 40px; margin-top: 40px; margin-left: auto; margin-right: auto; width:100%; text-align: center;">&copy; P. Traverse 2014</div>
 
 </body>
