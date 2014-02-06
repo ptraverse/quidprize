@@ -1,0 +1,36 @@
+{% include "base.html" %}
+
+{% include "menu.html" %}
+
+<center><a href="/raffle/">New Raffle</a>
+
+{% if rafflelist %}
+        <table class="pure-table pure-table-bordered pure-table-striped">
+         <tr>
+            <th>
+                Business
+            </th>
+            <th>
+                Target URL
+            </th>
+            <th>
+                Expiry Date
+            </th>
+            <th>
+                Date Created
+            </th>
+        </tr>
+        {% for raffle in rafflelist %}
+        <tr>
+            <td>{{ raffle.business.name }}</td>
+            <td>{{ raffle.target_url }}</td>
+            <td>{{ raffle.expiry_date }}</td>
+            <td>{{ raffle.date_created }}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+
+{% endif %}
+
+</center>

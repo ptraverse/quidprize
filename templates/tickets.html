@@ -1,0 +1,36 @@
+{% include "base.html" %}
+
+{% include "menu.html" %}
+
+<center><a href="/ticket/">New Ticket</a>
+
+{% if ticketlist %}
+        <table class="pure-table pure-table-bordered pure-table-striped">
+         <tr>
+            <th>
+                Activation Email
+            </th>
+             <th>
+                Date Activated
+            </th>
+            <th>
+                Owly Hash
+            </th>
+            <th>
+                Raffle
+            </th>
+        </tr>
+        {% for ticket in ticketlist %}
+        <tr>
+            <td>{{ ticket.activation_email }}</td>
+            <td>{{ ticket.date_activated }}</td>
+            <td>{{ ticket.owly_hash }}</td>
+            <td>{{ ticket.raffle }}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+
+{% endif %}
+
+</center>

@@ -11,4 +11,13 @@
 <pre class="snippet" data-language="html" style="text-align: center; width: 100%;"><code>
 /error500
 </code></pre>
+
+{% if message %}
+        <center><code>
+            {{ message }}
+        </code></center>
+{% endif %}
+
 {% endblock %}
+
+

@@ -1,5 +1,3 @@
-
-
 {% include "base.html" %}
 {% load widget_tweaks %}
 <br><br>
@@ -25,7 +23,7 @@
         {{ businessform.name|attr:"class:pure-input-1-4"|attr:"placeholder:Name" }}
         {{ businessform.contact_person|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Person" }}
         {{ businessform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Phone" }}        
-        	
+        <input type="file" accept="image/*" class="pure-input" name="logo" id="id_logo"/>
         
     <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
 
