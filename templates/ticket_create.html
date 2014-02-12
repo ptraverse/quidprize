@@ -1,0 +1,17 @@
+{% include "base.html" %}
+{% load widget_tweaks %}
+
+{% include "menu.html" %}
+
+{% if ticketform %}
+        <form method="POST" action="/ticket/" class="pure-form" style="text-align: center;" >{% csrf_token %}
+            <fieldset class="pure-group">
+                <center>
+                <legend class="pure-legend" >Create Ticket</legend>
+                {{ ticketform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Email" }}
+                {{ ticketform.raffle|attr:"class:pure-input-1-4" }}
+                </center>
+            </fieldset>
+            <button type="submit" class="pure-button pure-input-1-4 ">Create Ticket</button>
+        </form>
+{% endif %}

@@ -1,0 +1,17 @@
+{% include "base.html" %}
+{% load widget_tweaks %}
+
+{% include "menu.html" %}
+
+{% if raffleform %}
+        <form method="POST" action="/raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
+        <fieldset class="pure-group"><center>
+        <legend class="pure-legend" >Create Raffle</legend>
+        {{ raffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }}
+        {{ raffleform.expiry_date|attr:"class:pure-input-1-4"|attr:"placeholder:Expiry Date" }}
+        {{ raffleform.legal_agreement|attr:"id:legal_id" }}<label for="legal_id">I agree</label>
+        </center>
+        </fieldset>
+         <button type="submit" class="pure-button pure-input-1-4 ">Create Raffle</button>
+        </form>
+{% endif %}

@@ -106,6 +106,10 @@ def raffle_email(request, raffle_id, activation_email):
     t = Ticket.objects.filter(raffle=raffle_id).filter(activation_email=activation_email) #probably ways to optimise this
     return HttpResponseRedirect('../')
 
+def raffle_div_test(request,raffle_id):
+    r = Raffle.objects.get(id=raffle_id)
+    return render(request, 'raffle_div.html', {'raffle':r} )
+
 def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST)
@@ -140,7 +144,7 @@ def register(request):
         bf = BusinessForm()
         return render(request, 'register.html', {'userform':uf , 'businessform':bf } )
 
-def ticket(request):
+def ticket_create(request):
     if request.method == 'POST':
         tf = TicketForm(request.POST)
         if tf.is_valid():
@@ -159,9 +163,40 @@ def ticket(request):
         tf = TicketForm()
         return render(request, 'ticket.html', {'ticketform':tf} )
 
+def ticket(request, ticket_id):
+    t = Ticket.objects.get(id=ticket_id)
+    r = t.raffle
+    if request.user.is_active:
+        return render(request, '500.html', {'message':'todo is finish this part of the ciekt'})
+    else:
+        taf = TicketActivationForm()
+        print r.business.logo
+        return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
+
+def ticket_by_hash(request, owly_hash):
+    try:
+        t = Ticket.objects.get(owly_hash=owly_hash)
+    except Ticket.DoesNotExist:
+        return render(request, '404.html')
+    return ticket(request, t.id)
+
+def ticket_redirect(request, ticket_id):
+    try:
+        t = Ticket.objects.get(id=ticket_id)
+    except Ticket.DoesNotExist:
+        return render(request, '404.html')
+    return HttpResponseRedirect('/'+t.owly_hash)
+
 def tickets(request):
-    tl = Ticket.objects.all()
-    return render(request, 'tickets.html', {'ticketlist':tl} )
+    m = ''
+    if request.user.is_active:
+        try:
+            tl = Ticket.objects.filter(activation_email=request.user.email)
+        except Ticket.DoesNotExist:
+            m = m + 'You need to get some tickets activated to participate in quidprize'
+    else:
+        return render(request, '500.html', {'message':'you need to login to use this page'})
+    return render(request, 'you.html', {'ticketlist':tl, 'message':m} )
 
 def ticket_activation(request, raffle_id):
     if request.method == 'POST':
@@ -180,7 +215,6 @@ def ticket_activation(request, raffle_id):
 
 def ticket_activation_json(request,raffle_id):
     if request.POST.has_key('client_response'):
-        print(request.POST)
         ticket = Ticket.objects.create(raffle_id=raffle_id,date_activated = datetime.now())
         ticket.activation_email = request.POST.get('client_response')
         try:
@@ -189,9 +223,8 @@ def ticket_activation_json(request,raffle_id):
             user = User.objects.create(username=ticket.activation_email,email=ticket.activation_email)
         Owly = owly_api.Owly()
         tid_url = request.get_host()
-        tid_url = tid_url + '/tid/'
+        tid_url = tid_url + '/t/'
         tid_url = tid_url + str(ticket.id)
-        print(tid_url)
         response = Owly.url_shorten(tid_url)
         ticket.owly_hash = response['results']['hash']
         ticket.save()
@@ -208,3 +241,4 @@ def ticket_id(request, ticket_id):
         return render(request, 'ticket_stats.html', {'ticket':t} )
     else:
         return HttpResponseRedirect(t.raffle.target_url)
+

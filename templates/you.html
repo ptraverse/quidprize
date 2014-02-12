@@ -1,0 +1,38 @@
+{% include "base.html" %}
+
+
+
+<div id="main">
+
+ {% include "menu.html" %}
+<center>
+
+{% if ticketlist %}
+<table class="pure-table pure-table-bordered pure-table-striped">
+         <tr>
+            <th>
+                Hash
+            </th>
+            <th>
+                Date Activated
+            </th>
+            <th>
+                Raffle
+            </th>
+        </tr>
+        {% for t in ticketlist %}
+        <tr>
+            <td> {{ t.owly_hash }}</td>
+            <td>{{ t.date_activated }}</td>
+            <td>{{ t.raffle.business.name }}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+
+{% endif %}
+
+        {% if message %} <h1> {{ message }} </h1> {% endif %}
+</center>
+    </div>
+

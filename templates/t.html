@@ -1,0 +1,68 @@
+{% include "base.html" %}
+
+       <script>
+$(document).ready(function() {
+    $("#ajax_ticket_activation_button").click(function() {
+        var input_string = $("#id_activation_email").val();
+        var raffle_id = $("#raffle_id").val();
+        document.getElementById("id_loading_div").style.display = 'block';
+        $.ajax({
+            url : "/ticket_activation_json/"+raffle_id+"/",
+            type : "POST",
+            dataType: "json",
+            data : {
+                client_response : input_string,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success : function(json) {
+                    $('#id_response_div').html("");
+                    $('#id_response_div').append('<div>');
+                    $('#id_response_div').append('<pre>Your shortlink is:</pre>');
+                    $('#id_response_div').append('<a href="http://ow.ly/'+json.owly_hash+'">http://ow.ly/'+json.owly_hash+'</a>');
+                    $('#id_response_div').append('</div>');
+                },
+                error : function(xhr,errmsg,err) {
+                    alert(xhr.status + ": " + xhr.responseText);
+                    $('#id_response_div').append(xhr.status + ": " + xhr.responseText);
+                    $('#id_response_div').show();
+                }
+            });
+        document.getElementById("id_activation_email").readOnly = true;
+        document.getElementById("id_activation_email").style.background = '#dddddd';
+        return false;
+    });
+
+});
+        </script>
+
+
+{% load widget_tweaks %}
+
+{% if raffle %}
+        {% include "raffle_div.html" %}
+        {% if ticketactivationform %}
+        <form method="POST" action="/ticket/" class="pure-form" style="text-align: center;padding-top:50px; " >{% csrf_token %}
+            <fieldset class="pure-group">
+                <center>
+                <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
+                <legend class="pure-legend" >Get your unique shortlink</legend>
+                {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Email" }}
+                </center>
+            </fieldset>
+            <button type="submit" class="pure-button pure-input-1-4 " id="ajax_ticket_activation_button" name="ajax_ticket_activation_button">
+                Create Shortlink</button>
+        </form>
+{% endif %}
+
+        <center>
+        <div id="id_response_div" style="padding-top:50px;">
+
+            <div id="id_loading_div" style="display: none; padding-top: 40px;">
+
+                <img src="/static/images/1-0.gif" />
+            </div>
+
+        </div>
+        </center>
+{% endif %}
+

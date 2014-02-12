@@ -13,13 +13,16 @@ urlpatterns = patterns('',
     url(r'^log_out/$','apps.qp.views.log_out'),
     url(r'^raffle/$','apps.qp.views.raffle'),
     url(r'^raffles/$','apps.qp.views.raffles'),
+    url(r'^raffle_div_test/(.*)/$','apps.qp.views.raffle_div_test'),
     url(r'^register/$','apps.qp.views.register'),
-    url(r'^ticket/$','apps.qp.views.ticket'),
+    url(r'^ticket_create/$','apps.qp.views.ticket_create'),
     url(r'^tid/(.*)/$','apps.qp.views.ticket_id'),
     url(r'^tr/(.*)$','apps.qp.views.ticket_redirect'),
+    url(r'^t/(.*)$','apps.qp.views.ticket_redirect'),
     url(r'^tickets/$','apps.qp.views.tickets'),
     url(r'^ticket_activation/(.*)/$','apps.qp.views.ticket_activation'), # change this to something nice later
     url(r'^ticket_activation_json/(.*)/$','apps.qp.views.ticket_activation_json'), # change this to something nice later
+    url(r'^(\w+)$','apps.qp.views.ticket_by_hash'),
     url(r'^$','apps.qp.views.index'),
 
 
@@ -30,4 +33,8 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-)  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # only in development!
+)
+
+
+if settings.DEBUG: #only in development!!
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
