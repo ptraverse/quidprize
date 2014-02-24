@@ -1,0 +1,15 @@
+{% include "base.html" %}
+
+{% if request.user.is_active %}
+    {% include "menu.html" %}
+{% else %}
+    {% include "menu_alternate.html" %}
+{% endif %}
+
+    {% if raffle %}
+        {% include "raffle_div.html" %}
+    {% endif %}
+
+    {% if owned_ticket %}
+        <h2><center>This link belongs to someone else, but you <a href="/{{ owned_ticket }}">already own a ticket</a> for this same raffle:</center></h2>
+    {% endif %}

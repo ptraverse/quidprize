@@ -1,0 +1,63 @@
+<htmL>
+<head>
+
+    <title>Redirect Test</title>
+</head>
+<SCRIPT LANGUAGE="JavaScript">
+
+    var time_left = 5;
+    var cinterval;
+    var timestatus=1;
+
+    function time_dec(){
+        time_left--;
+        document.getElementById('countdown').innerHTML = time_left;
+        if(time_left == 0){
+            clearInterval(cinterval);
+            // do some stuff
+            document.getElementById('stopbutton').value="Pow!";
+        }
+    }
+
+    function resumetime()
+    {
+        //time_left = 50;
+        clearInterval(cinterval);
+        cinterval = setInterval('time_dec()', 1000);
+    }
+
+    function defaultstart()
+    {
+        time_left = 5;
+        clearInterval(cinterval);
+        cinterval = setInterval('time_dec()', 1000);
+    }
+
+    function stopstarttime()
+    {
+        if(timestatus==1)
+    {
+        clearInterval(cinterval);
+        document.getElementById('stopbutton').value="Start";
+        timestatus=0;
+    }
+        else
+    {
+        clearInterval(cinterval);
+        cinterval = setInterval('time_dec()', 1000);
+        document.getElementById('stopbutton').value="Stop";
+        timestatus=1;
+    }
+    }
+
+    defaultstart();
+
+    </SCRIPT>
+</HEAD>
+
+<body>
+    Redirecting In <span id="countdown">5</span>.
+    <INPUT TYPE="button" value="stop" id="stopbutton" onclick="stopstarttime()">
+</body>
+</HTML>
+

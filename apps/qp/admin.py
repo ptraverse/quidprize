@@ -26,7 +26,7 @@ class RaffleAdmin(admin.ModelAdmin):
 class TicketAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('raffle', 'owly_hash', 'activation_email', 'date_activated')
+            'fields': ('raffle', 'hash', 'activation_email', 'date_activated')
         }),
     )
 

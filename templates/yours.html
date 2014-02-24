@@ -1,0 +1,10 @@
+{% include "base.html" %}
+{% include "menu.html" %}
+
+    {% if raffle %}
+        {% include "raffle_div.html" %}
+    {% endif %}
+
+    {% if ticket %}
+        {% include "ticket_stats_div.html" %}
+    {% endif %}

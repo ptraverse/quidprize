@@ -1,0 +1,54 @@
+{% if ticket %}
+        <form method="POST" action="" class="pure-form" style="text-align: center;padding-top:50px; " >{% csrf_token %}
+            <fieldset class="pure-group">
+                <center>
+                <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
+                <legend class="pure-legend" >Ticket Stats</legend>
+
+                    <table class="pure-table pure-table-bordered pure-table-striped">
+                        <tr>
+                            <td>
+                                Ticket Owner
+                            </td>
+                            <td>
+                                {{ ticket.activation_email }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ticket URL
+                            </td>
+                            <td>
+                                http://bit.ly/{{ ticket.hash }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ticket Num Clicks
+                            </td>
+                            <td>
+                                <strong>{{ ticket.num_clicks }}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ticket Raffle Bizness
+                            </td>
+                            <td>
+                                {{ ticket.raffle.business.name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Todo
+                            </td>
+                            <td>
+                                Countries  -  Zip codes?<br>
+                                Referrers
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </fieldset>
+        </form>
+{% endif %}

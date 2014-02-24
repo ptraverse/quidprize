@@ -44,7 +44,7 @@ class Owly:
 			url += "&to="+to
 	        return json.load(urllib2.urlopen(url))
 
-	def test_url_clicStats(self):
+	def test_url_clickStats(self):
 		clickstats_response = self.url_clickStats("http://ow.ly/1234")
 		print clickstats_response['results']
 

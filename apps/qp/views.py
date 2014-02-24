@@ -17,8 +17,9 @@ from django.utils import simplejson
 
 from apps.qp.forms import *
 import owly_api
+import bitly_api
 
-def business(request):
+def business_create(request):
     if request.method == 'POST': # If the form has been submitted...
         form = BusinessForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -28,6 +29,16 @@ def business(request):
     else:
         form = BusinessForm() # An unbound form
     return render(request, 'business.html', {'form': form, })
+
+def business(request,business_name):
+    try:
+        b = Business.objects.get(name=business_name)
+    except Business.DoesNotExist:
+        return render(request, '500.html', {'message':'Dis Bizness '+business_name+' DNE'})
+    rl = Raffle.objects.filter(business=b.id)
+    r = rl[0]
+    taf = TicketActivationForm()
+    return render(request, 'b.html', {'business': b, 'raffle':r, 'ticketactivationform':taf})
 
 def index(request):
     if not request.user.is_authenticated():
@@ -144,16 +155,22 @@ def register(request):
         bf = BusinessForm()
         return render(request, 'register.html', {'userform':uf , 'businessform':bf } )
 
+def test_countdown(request):
+    return render(request, 'countdown_test.html' )
+
 def ticket_create(request):
     if request.method == 'POST':
         tf = TicketForm(request.POST)
         if tf.is_valid():
             ticket = tf.save(commit=False)
             ticket.date_activated = datetime.now()
-            Owly = owly_api.Owly()
-            response = Owly.url_shorten(ticket.raffle.target_url)
+            API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
+            API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
+            ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
+            Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+            response = Bitly.url_shorten(ticket.raffle.target_url)
             print response
-            ticket.owly_hash = response['results']['hash']
+            ticket.hash = response['results']['hash']
             ticket.save()
             return HttpResponseRedirect('/')
         else:
@@ -165,17 +182,25 @@ def ticket_create(request):
 
 def ticket(request, ticket_id):
     t = Ticket.objects.get(id=ticket_id)
+    t.num_clicks = t.get_num_clicks()
     r = t.raffle
     if request.user.is_active:
-        return render(request, '500.html', {'message':'todo is finish this part of the ciekt'})
+        if t.activation_email == request.user.email: #if this user owns this ticket
+            return render(request, 'yours.html', {'ticket':t, 'raffle':r, })
+        else:
+            t2 = Ticket.objects.get(activation_email=request.user.email, raffle=r)
+            if t2:# if this user owns another ticket of the same raffle
+                return render(request, 'not_yours.html', {'ticket':t, 'owned_ticket':t2, 'raffle':r, })
+            else: # user does not own one in this raffle
+                taf = TicketActivationForm()
+                return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
     else:
         taf = TicketActivationForm()
-        print r.business.logo
         return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
 
-def ticket_by_hash(request, owly_hash):
+def ticket_by_hash(request, hash):
     try:
-        t = Ticket.objects.get(owly_hash=owly_hash)
+        t = Ticket.objects.get(hash=hash)
     except Ticket.DoesNotExist:
         return render(request, '404.html')
     return ticket(request, t.id)
@@ -185,15 +210,22 @@ def ticket_redirect(request, ticket_id):
         t = Ticket.objects.get(id=ticket_id)
     except Ticket.DoesNotExist:
         return render(request, '404.html')
-    return HttpResponseRedirect('/'+t.owly_hash)
+    return HttpResponseRedirect('/'+t.hash)
 
 def tickets(request):
     m = ''
     if request.user.is_active:
         try:
             tl = Ticket.objects.filter(activation_email=request.user.email)
+            print tl
         except Ticket.DoesNotExist:
             m = m + 'You need to get some tickets activated to participate in quidprize'
+        API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
+        API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
+        ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
+        Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+        for ticket in tl:
+            ticket.num_clicks = Bitly.link_clicks(link='http://bit.ly/'+ticket.hash)
     else:
         return render(request, '500.html', {'message':'you need to login to use this page'})
     return render(request, 'you.html', {'ticketlist':tl, 'message':m} )
@@ -221,15 +253,18 @@ def ticket_activation_json(request,raffle_id):
             user = User.objects.get(email=ticket.activation_email)
         except User.DoesNotExist:
             user = User.objects.create(username=ticket.activation_email,email=ticket.activation_email)
-        Owly = owly_api.Owly()
-        tid_url = request.get_host()
+        API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
+        API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
+        ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
+        bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+        tid_url = 'http://' + request.get_host()
         tid_url = tid_url + '/t/'
         tid_url = tid_url + str(ticket.id)
-        response = Owly.url_shorten(tid_url)
-        ticket.owly_hash = response['results']['hash']
+        response = bitly.shorten(tid_url)
+        ticket.hash = response['hash']
         ticket.save()
         response_dict = {}
-        response_dict.update({'owly_hash': ticket.owly_hash  })
+        response_dict.update({'hash': ticket.hash,'url':response['url']  })
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
     else:
         print(request.POST)

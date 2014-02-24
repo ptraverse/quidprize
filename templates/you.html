@@ -19,12 +19,16 @@
             <th>
                 Raffle
             </th>
+            <th>
+                Number of Clicks
+            </th>
         </tr>
         {% for t in ticketlist %}
         <tr>
-            <td> {{ t.owly_hash }}</td>
+            <td><a href="/{{ t.hash }}">{{ t.hash }}</a></td>
             <td>{{ t.date_activated }}</td>
             <td>{{ t.raffle.business.name }}</td>
+            <td>{{ t.num_clicks }}</td>
         </tr>
         {% endfor %}
 

@@ -7,8 +7,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    
-    url(r'^business/$', 'apps.qp.views.business'),
+
+    url(r'^b/(.*)$', 'apps.qp.views.business'),
+    url(r'^business_create/$', 'apps.qp.views.business_create'),
     url(r'^log_in/$','apps.qp.views.log_in'),
     url(r'^log_out/$','apps.qp.views.log_out'),
     url(r'^raffle/$','apps.qp.views.raffle'),
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
 
     #only in development!
     url(r'^list/$', 'apps.qp.views.list', name='list'),
+    url(r'^countdown_test/$', 'apps.qp.views.test_countdown', name='countdown_test'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

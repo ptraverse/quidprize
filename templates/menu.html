@@ -1,5 +1,7 @@
 {% include "base.html" %}
 
+
+
 <div class="pure-menu pure-menu-open " style="background: none repeat scroll 0 0; position: fixed; width: 160px; top:0;bottom:0; background-color: #E6E6E6; font-color: white;  ">
 
     <div style="background-color: #E6E6E6; text-align: center; height:40px; ">
@@ -8,12 +10,12 @@
         </a>
     </div>
 
-    <ul>
+    <ul style="text-align:center;">
         <li class="pure-menu-heading" style="padding-top: 12px; padding-bottom: 12px;">
             <center>{{ request.user.email }}</center>
         </li>
-        <li><a href="/raffles/">Raffles</a></li>
-        <li><a href="/tickets/">Tickets</a></li>
+        <li><a href="/raffles/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#70A9F4'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Raffles</a></li>
+        <li><a href="/tickets/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#70F47F'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Tickets</a></li>
 
 
         {% if business %}
@@ -22,6 +24,6 @@
         {% endif %}
 
         <li class="pure-menu-heading"></li>
-        <li><a href="/log_out/">Log Out</a></li>
+            <li><a href="/log_out/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#F5F573'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Log Out</a></li>
     </ul>
 </div>
