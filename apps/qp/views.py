@@ -188,10 +188,10 @@ def ticket(request, ticket_id):
         if t.activation_email == request.user.email: #if this user owns this ticket
             return render(request, 'yours.html', {'ticket':t, 'raffle':r, })
         else:
-            t2 = Ticket.objects.get(activation_email=request.user.email, raffle=r)
-            if t2:# if this user owns another ticket of the same raffle
+            try:
+                t2 = Ticket.objects.get(activation_email=request.user.email, raffle=r)
                 return render(request, 'not_yours.html', {'ticket':t, 'owned_ticket':t2, 'raffle':r, })
-            else: # user does not own one in this raffle
+            except Ticket.DoesNotExist: # user does not own one in this raffle
                 taf = TicketActivationForm()
                 return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
     else:
@@ -247,25 +247,35 @@ def ticket_activation(request, raffle_id):
 
 def ticket_activation_json(request,raffle_id):
     if request.POST.has_key('client_response'):
-        ticket = Ticket.objects.create(raffle_id=raffle_id,date_activated = datetime.now())
-        ticket.activation_email = request.POST.get('client_response')
         try:
-            user = User.objects.get(email=ticket.activation_email)
-        except User.DoesNotExist:
-            user = User.objects.create(username=ticket.activation_email,email=ticket.activation_email)
-        API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
-        API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
-        ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
-        bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
-        tid_url = 'http://' + request.get_host()
-        tid_url = tid_url + '/t/'
-        tid_url = tid_url + str(ticket.id)
-        response = bitly.shorten(tid_url)
-        ticket.hash = response['hash']
-        ticket.save()
+            ticket = Ticket.objects.get(raffle=raffle_id,activation_email=request.POST.get('client_response'))
+            url = 'http://bit.ly/'+ticket.hash
+            status = 'existing'
+        except Ticket.DoesNotExist:
+            ticket = Ticket.objects.create(raffle_id=raffle_id,date_activated = datetime.now())
+            ticket.activation_email = request.POST.get('client_response')
+            try:
+                user = User.objects.get(email=ticket.activation_email)
+            except User.DoesNotExist:
+                user = User.objects.create(username=ticket.activation_email,email=ticket.activation_email)
+            API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
+            API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
+            ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
+            bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+            tid_url = 'http://' + request.get_host()
+            tid_url = tid_url + '/t/'
+            tid_url = tid_url + str(ticket.id)
+            response = bitly.shorten(tid_url)
+            ticket.hash = response['hash']
+            ticket.save()
+            url = response['url']
+            status = 'new'
+        except Ticket.MultipleObjectsReturned:
+            return render(request, '500.html', { 'message':'Multiple Objects Returned!'})
         response_dict = {}
-        response_dict.update({'hash': ticket.hash,'url':response['url']  })
+        response_dict.update({'hash': ticket.hash,'url':url,'status':status  })
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+
     else:
         print(request.POST)
         return render(request, '500.html', {'message':'request post missing key "client response"'})

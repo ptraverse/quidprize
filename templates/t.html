@@ -18,8 +18,19 @@ $(document).ready(function() {
                 success : function(json) {
                     $('#id_response_div').html("");
                     $('#id_response_div').append('<div>');
-                    $('#id_response_div').append('<pre>Your shortlink is:</pre>');
-                    $('#id_response_div').append('<a href="http://ow.ly/'+json.hash+'">http://bt.ly/'+json.hash+'</a>');
+                    if (json.status=='new')
+                    {
+                        $('#id_response_div').append('<pre>Your new shortlink is:</pre>');
+                    }
+                    else if (json.status=='existing')
+                    {
+                        $('#id_response_div').append('<pre>This email already has a shortlink:</pre>');
+                    }
+                    $('#id_response_div').append('<a href="http://bit.ly/'+json.hash+'">http://bt.ly/'+json.hash+'</a>');
+                    if (json.status=='existing')
+                    {
+                        $('#id_response_div').append('<pre> Please login to view stats</pre>');
+                    }
                     $('#id_response_div').append('</div>');
                 },
                 error : function(xhr,errmsg,err) {
@@ -136,7 +147,7 @@ $(document).ready(function() {
 {% endif %}
 
         <center>
-        <div id="id_response_div" style="padding-top:50px;">
+        <div id="id_response_div" style="padding-top:20px;">
 
             <div id="id_loading_div" style="display: none; padding-top: 40px;">
 

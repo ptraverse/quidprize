@@ -75,8 +75,11 @@ class Ticket(models.Model):
     def __unicode__(self):
         return self.hash
     def get_num_clicks(self):
-        Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
-        return Bitly.link_clicks(link='http://bit.ly/'+self.hash)
+        if self.activation_email=='todo@allowblank.com':
+            return 0
+        else:
+            Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+            return Bitly.link_clicks(link='http://bit.ly/'+self.hash)
     def calculate_height(self):
         try:
             subs = Ticket.objects.get(raffle=self.raffle, parent_ticket = self)
