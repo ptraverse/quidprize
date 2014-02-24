@@ -29,8 +29,8 @@ class Raffle(models.Model):
     target_url = models.CharField(max_length="64")
     date_created = models.DateTimeField()
     expiry_date = models.DateTimeField()
-    #draw_winner = models.ForeignKey(User, blank=True)
-    #draw_date = models.DateTimeField()
+    draw_winner = models.ForeignKey(User, null=True, blank=True)
+    draw_date = models.DateTimeField(null=True)
     def __unicode__(self):
         return '100$ gift card to whoever gets as many clicks to '+self.target_url+' for '+self.business.name
     def draw(self):
@@ -70,7 +70,7 @@ class Ticket(models.Model):
     hash = models.CharField(max_length="16")
     raffle = models.ForeignKey(Raffle)
     date_activated = models.DateTimeField()
-    #parent_ticket = models.ForeignKey('self', blank=True)
+    parent_ticket = models.ForeignKey('self', null=True, blank=True)
     # def stats():
     def __unicode__(self):
         return self.hash
