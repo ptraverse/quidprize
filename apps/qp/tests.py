@@ -7,9 +7,17 @@
 
 
 ## Raffle draw test
-import os
-import sys
-sys.path.append('../../')
-from models import *
-r = Raffle.objects.get(business=2)
-r.draw()
+# import os
+# import sys
+#
+# sys.path.append('../../')
+# from models import *
+# r = Raffle.objects.get(business=2)
+# r.draw()
+
+
+## Email Test
+import local_settings_development
+from django.core.mail import EmailMessage
+email = EmailMessage('Mail Test', 'This is a test', to=['philippe.traverse@gmail.com'])
+email.send()

@@ -92,3 +92,19 @@ class Ticket(models.Model):
                 max_height = s.height
         return max_height+1
 
+#as copied from
+#http://effbot.org/pyfaq/how-do-i-send-mail-from-a-python-script.htm
+# def send_email(to, subject, message):
+#     server = smtplib.SMTP(EMAIL_SERVER,587) #port 465 or 587
+#     server.ehlo()
+#     server.starttls()
+#     server.ehlo()
+#     myusername = EMAIL_USERNAME #Dont forget to put this back before doing any commits to github!!
+#     mysupersecretpassword = EMAIL_PASSWORD #Dont forget to put this back before doing any commits to github!!
+#     server.login(myusername,mysupersecretpassword)
+#     m = MIMEText(message)
+#     m['Subject'] = subject
+#     m['From'] = myusername
+#     m['To'] = to
+#     server.sendmail(myusername,[m['To']],m.as_string())
+#     server.close()
