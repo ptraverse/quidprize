@@ -17,6 +17,11 @@ class Business(models.Model):
     address = models.CharField(max_length="64")
     def __unicode__(self):
         return self.name
+    def root_ticket_name(self):
+        root_ticket_name = self.name
+        for vowel in 'aeiou':
+            root_ticket_name = root_ticket_name.replace(vowel,'')
+        return root_ticket_name
 
 class Document(models.Model):
     docfile = models.FileField(upload_to='documents/%Y/%m/%d')
@@ -66,10 +71,11 @@ class Raffle(models.Model):
         return winner
 
 class Ticket(models.Model):
-    activation_email = models.CharField(max_length="75")
+    activation_email = models.CharField(max_length="75",null=True,default=None)
     hash = models.CharField(max_length="16")
     raffle = models.ForeignKey(Raffle)
-    date_activated = models.DateTimeField()
+    is_root_ticket = models.BooleanField(default=False)
+    date_activated = models.DateTimeField(null=True)
     parent_ticket = models.ForeignKey('self', null=True, blank=True)
     # def stats():
     def __unicode__(self):
@@ -91,20 +97,3 @@ class Ticket(models.Model):
             if s.height>max_height:
                 max_height = s.height
         return max_height+1
-
-#as copied from
-#http://effbot.org/pyfaq/how-do-i-send-mail-from-a-python-script.htm
-# def send_email(to, subject, message):
-#     server = smtplib.SMTP(EMAIL_SERVER,587) #port 465 or 587
-#     server.ehlo()
-#     server.starttls()
-#     server.ehlo()
-#     myusername = EMAIL_USERNAME #Dont forget to put this back before doing any commits to github!!
-#     mysupersecretpassword = EMAIL_PASSWORD #Dont forget to put this back before doing any commits to github!!
-#     server.login(myusername,mysupersecretpassword)
-#     m = MIMEText(message)
-#     m['Subject'] = subject
-#     m['From'] = myusername
-#     m['To'] = to
-#     server.sendmail(myusername,[m['To']],m.as_string())
-#     server.close()

@@ -34,16 +34,19 @@ class Migration(SchemaMigration):
             ('target_url', self.gf('django.db.models.fields.CharField')(max_length='64')),
             ('date_created', self.gf('django.db.models.fields.DateTimeField')()),
             ('expiry_date', self.gf('django.db.models.fields.DateTimeField')()),
+            ('draw_winner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+            ('draw_date', self.gf('django.db.models.fields.DateTimeField')(null=True)),
         ))
         db.send_create_signal('qp', ['Raffle'])
 
         # Adding model 'Ticket'
         db.create_table('qp_ticket', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('activation_email', self.gf('django.db.models.fields.CharField')(max_length='75')),
+            ('activation_email', self.gf('django.db.models.fields.CharField')(default=None, max_length='75', null=True)),
             ('hash', self.gf('django.db.models.fields.CharField')(max_length='16')),
             ('raffle', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['qp.Raffle'])),
-            ('date_activated', self.gf('django.db.models.fields.DateTimeField')()),
+            ('date_activated', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+            ('parent_ticket', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['qp.Ticket'], null=True, blank=True)),
         ))
         db.send_create_signal('qp', ['Ticket'])
 
@@ -118,16 +121,19 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Raffle'},
             'business': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['qp.Business']"}),
             'date_created': ('django.db.models.fields.DateTimeField', [], {}),
+            'draw_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
+            'draw_winner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'target_url': ('django.db.models.fields.CharField', [], {'max_length': "'64'"})
         },
         'qp.ticket': {
             'Meta': {'object_name': 'Ticket'},
-            'activation_email': ('django.db.models.fields.CharField', [], {'max_length': "'75'"}),
-            'date_activated': ('django.db.models.fields.DateTimeField', [], {}),
+            'activation_email': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': "'75'", 'null': 'True'}),
+            'date_activated': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'hash': ('django.db.models.fields.CharField', [], {'max_length': "'16'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'parent_ticket': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['qp.Ticket']", 'null': 'True', 'blank': 'True'}),
             'raffle': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['qp.Raffle']"})
         }
     }

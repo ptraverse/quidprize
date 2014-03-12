@@ -8,31 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Raffle.draw_winner'
-        db.add_column('qp_raffle', 'draw_winner',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'Raffle.draw_date'
-        db.add_column('qp_raffle', 'draw_date',
-                      self.gf('django.db.models.fields.DateTimeField')(null=True),
-                      keep_default=False)
-
-        # Adding field 'Ticket.parent_ticket'
-        db.add_column('qp_ticket', 'parent_ticket',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['qp.Ticket'], null=True, blank=True),
+        # Adding field 'Ticket.is_root_ticket'
+        db.add_column('qp_ticket', 'is_root_ticket',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'Raffle.draw_winner'
-        db.delete_column('qp_raffle', 'draw_winner_id')
-
-        # Deleting field 'Raffle.draw_date'
-        db.delete_column('qp_raffle', 'draw_date')
-
-        # Deleting field 'Ticket.parent_ticket'
-        db.delete_column('qp_ticket', 'parent_ticket_id')
+        # Deleting field 'Ticket.is_root_ticket'
+        db.delete_column('qp_ticket', 'is_root_ticket')
 
 
     models = {
@@ -99,10 +83,11 @@ class Migration(SchemaMigration):
         },
         'qp.ticket': {
             'Meta': {'object_name': 'Ticket'},
-            'activation_email': ('django.db.models.fields.CharField', [], {'max_length': "'75'"}),
-            'date_activated': ('django.db.models.fields.DateTimeField', [], {}),
+            'activation_email': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': "'75'", 'null': 'True'}),
+            'date_activated': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'hash': ('django.db.models.fields.CharField', [], {'max_length': "'16'"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_root_ticket': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'parent_ticket': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['qp.Ticket']", 'null': 'True', 'blank': 'True'}),
             'raffle': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['qp.Raffle']"})
         }
