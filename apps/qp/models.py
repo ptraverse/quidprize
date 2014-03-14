@@ -70,19 +70,40 @@ class Raffle(models.Model):
         self.draw_date = datetime.now()
         return winner
 
+class TicketManager(models.Manager):
+    def create_ticket(self,raffle,is_root_ticket,parent_ticket=''):
+        if is_root_ticket is True:
+            t = Ticket.objects.create(raffle=raffle,hash=raffle.business.root_ticket_name(),is_root_ticket=True)
+        else:
+            API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
+            API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
+            ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
+            bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+            t = self.create(raffle=raffle,is_root_ticket=False,parent_ticket=parent_ticket)
+            tid_url = 'http://10.0.1.14:8000/'
+            tid_url = tid_url + '/t/'
+            tid_url = tid_url + str(t.id)
+            response = bitly.shorten(tid_url)
+            t.hash = response['hash']
+            t.save()
+        return t
+
 class Ticket(models.Model):
     activation_email = models.CharField(max_length="75",null=True,default=None)
-    hash = models.CharField(max_length="16")
+    hash = models.CharField(max_length=16,unique=True)
     raffle = models.ForeignKey(Raffle)
     is_root_ticket = models.BooleanField(default=False)
     date_activated = models.DateTimeField(null=True)
     parent_ticket = models.ForeignKey('self', null=True, blank=True)
+    objects = TicketManager()
     # def stats():
     def __unicode__(self):
         return self.hash
     def get_num_clicks(self):
         if self.activation_email=='todo@allowblank.com':
             return 0
+        elif self.is_root_ticket==True:
+            return 0 # for now
         else:
             Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
             return Bitly.link_clicks(link='http://bit.ly/'+self.hash)

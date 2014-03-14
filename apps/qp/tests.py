@@ -49,10 +49,37 @@ except Exception:
 print(r)
 
 # 3. init root ticket
-t = Ticket.objects.create(raffle=r,hash=r.business.root_ticket_name())
+t = Ticket.objects.create_ticket(raffle=r,is_root_ticket=True)
 
 # 4. simulate ticket clicks
+import requests
+url_base = "http://bit.ly/"
+url_ending = t.hash
+print url_base+url_ending
+req = requests.get(url_base+url_ending)
+print('<<<')
+print(req.text[0:128])
+print('... >>>')
+
+#4.5 Check that those links are getting counted
+print(t.hash+' has ')
+print(t.get_num_clicks())
+print('clicks')
+
 # 5. simulate ticket creation
+t2 = Ticket.objects.create_ticket(raffle=r,is_root_ticket=False,parent_ticket=t)
+t3 = Ticket.objects.create_ticket(raffle=r,is_root_ticket=False,parent_ticket=t2)
+t4 = Ticket.objects.create_ticket(raffle=r,is_root_ticket=False,parent_ticket=t3)
+
 # 6. simulate more ticket clicks, creation
+ticketlist = Ticket.objects.all()
+for tx in ticketlist:
+    url_ending = tx.hash
+    r = requests.get(url_base+url_ending)
+    print('<<<')
+    print(r.text[0:128])
+    print('... >>>\n')
+
+
 # 7. simulate draw
 # 8. simulate win

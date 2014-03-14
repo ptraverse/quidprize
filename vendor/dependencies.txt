@@ -3,3 +3,4 @@ sudo apt-get install libapache2-mod-wsgi
 
 pip install django-widget-tweaks
 pip install South
+pip install requests
