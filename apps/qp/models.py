@@ -3,6 +3,7 @@ from django.contrib.auth.models import *
 import os.path
 from datetime import datetime
 import bitly_api
+import simplejson
 
 API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
 API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
@@ -69,6 +70,20 @@ class Raffle(models.Model):
         self.draw_winner = winner
         self.draw_date = datetime.now()
         return winner
+    def graph(self, highlight_node=False):
+        tl = Ticket.objects.filter(raffle=self.id)
+        nodes = {}
+        for t in tl:
+            n = t
+            n.label=t.hash
+            n.x=t.id
+            n.y=t.id*2
+            nodes.update({'node':n})
+            # if n.parent_ticket_id>0:
+            #    edges.append({'id':t.id,'source':t.id,'target':t.parent_ticket_id})
+        response_dict = {}
+        response_dict.update({'nodes': nodes})
+        return response_dict
 
 class TicketManager(models.Manager):
     def create_ticket(self,raffle,is_root_ticket,parent_ticket=''):

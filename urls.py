@@ -30,6 +30,9 @@ urlpatterns = patterns('',
     #only in development!
     url(r'^list/$', 'apps.qp.views.list', name='list'),
     url(r'^countdown_test/$', 'apps.qp.views.test_countdown', name='countdown_test'),
+    url(r'^sigma_test/$', 'apps.qp.views.sigma_test', name='sigma_test'),
+    url(r'^sigma_test_json/$', 'apps.qp.views.sigma_test_json', name='sigma_test_json'),
+    url(r'^sigma_test_gexf/$', 'apps.qp.views.sigma_test_gexf', name='sigma_test_gexf'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

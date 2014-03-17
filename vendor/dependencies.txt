@@ -4,3 +4,8 @@ sudo apt-get install libapache2-mod-wsgi
 pip install django-widget-tweaks
 pip install South
 pip install requests
+udo easy_install pygexf
+pip install xml
+sudo apt-get install libxml2-dev
+sudo apt-get install libxslt1-dev 
+sudo apt-get install python2.6-dev

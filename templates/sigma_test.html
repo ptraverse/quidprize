@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>SigmaTest</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/sigma.min.js"></script>
+<script type="text/javascript" src="/static/js/plugins/sigma.parsers.gexf.min.js"></script>
+<script>
+
+  sigma.parsers.gexf(
+    '../sigma_test_gexf/',
+    { // Here is the ID of the DOM element that
+      // will contain the graph:
+      container: 'sigma-container',
+      settings: {
+        defaultNodeColor: '#ec5148'
+      }
+    },
+    function(s) {
+        var i=0;
+        s.graph.nodes().forEach(function(n) {
+            n.x = i;
+            n.y = i*i;
+            n.size = 33;
+            n.color = '#ec5148';
+            i++;
+        });
+        s.refresh();
+    }
+  );
+
+
+</script>
+</head>
+
+<body>
+Foo
+
+<div id="container">
+  <style>
+    #sigma-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="sigma-container"></div>
+</div>
+
+</body>
+
+</html>

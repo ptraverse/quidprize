@@ -18,6 +18,8 @@ from django.utils import simplejson
 from apps.qp.forms import *
 import owly_api
 import bitly_api
+from gexf import Gexf, GexfImport
+from lxml import etree
 
 def business_create(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -154,6 +156,47 @@ def register(request):
         uf = UserForm()
         bf = BusinessForm()
         return render(request, 'register.html', {'userform':uf , 'businessform':bf } )
+
+def sigma_test(request):
+    g = {}
+    return render(request, 'sigma_test.html', {'json':g})
+
+def sigma_test_json(request):
+    r = Raffle.objects.get(id='58')
+    tl = Ticket.objects.filter(raffle=r.id)
+    print tl
+    nodes = []
+    edges = []
+    for t in tl:
+        n = {}
+        n.update({'id':'n'+str(t.id),'label':t.hash,'x':0,'y':2,'size':1})
+        nodes.append(n)
+        if t.parent_ticket_id>0:
+            e = {}
+            e.update({'id':t.id,'source':t.id,'target':t.parent_ticket_id})
+            edges.append(e)
+    g = {}
+    g.update({'nodes':nodes,'edges':edges})
+    return HttpResponse(simplejson.dumps(g), content_type="application/json")
+    #return render(request, 'sigma_test.html', {'json':simplejson.dumps(g),'content_type':"application/json"})
+    # return render(request, 'sigma_test.html', {'json':g})
+
+def sigma_test_gexf(request):
+    r = Raffle.objects.get(id='58')
+    tl = Ticket.objects.filter(raffle=r.id)
+    gexf = Gexf('Sample','Testting Sigma JS')
+    graph = gexf.addGraph('directed','static','a test graph')
+    n = 0
+    e = 0
+    for t in tl:
+        graph.addNode(t.id,t.hash);
+        n = n+1
+        if t.parent_ticket_id>0:
+            graph.addEdge(t.id,t.id,t.parent_ticket_id)
+            e = e+1
+    response = etree.tostring(gexf.getXML(),pretty_print=True,encoding='utf-8',xml_declaration=True)
+    print(response)
+    return HttpResponse(response, content_type="application/json")
 
 def test_countdown(request):
     return render(request, 'countdown_test.html' )
