@@ -181,21 +181,46 @@ def sigma_test_json(request):
     #return render(request, 'sigma_test.html', {'json':simplejson.dumps(g),'content_type':"application/json"})
     # return render(request, 'sigma_test.html', {'json':g})
 
-def sigma_test_gexf(request):
-    r = Raffle.objects.get(id='58')
-    tl = Ticket.objects.filter(raffle=r.id)
-    gexf = Gexf('Sample','Testting Sigma JS')
-    graph = gexf.addGraph('directed','static','a test graph')
-    n = 0
-    e = 0
+def sigma_gexf(request, ticket_hash):
+    x = Ticket.objects.get(hash=ticket_hash)
+    r = Raffle.objects.get(id=x.raffle.id)
+    tl = Ticket.objects.filter(raffle=r.id).order_by('-is_root_ticket')
+    gexf = Gexf('Tree For '+ticket_hash,'Sigma JS Graph')
+    graph = gexf.addGraph('directed','static',ticket_hash)
+    graph.addNodeAttribute('xcoord','0',"float")
+    graph.addNodeAttribute('ycoord','0',"float")
+    graph.addNodeAttribute('label','',"string")
+    coords = r.graph()
+    for i,t in enumerate(tl):
+        n = graph.addNode(t.id,t.hash)
+        n.addAttribute(0,str(coords[i][0]))
+        n.addAttribute(1,str(coords[i][1]))
+        n.addAttribute(2,t.hash)
     for t in tl:
-        graph.addNode(t.id,t.hash);
-        n = n+1
         if t.parent_ticket_id>0:
             graph.addEdge(t.id,t.id,t.parent_ticket_id)
-            e = e+1
     response = etree.tostring(gexf.getXML(),pretty_print=True,encoding='utf-8',xml_declaration=True)
-    print(response)
+    print response
+    return HttpResponse(response, content_type="application/json")
+
+def sigma_test_gexf(request):
+    r = Raffle.objects.get(id='58')
+    tl = Ticket.objects.filter(raffle=r.id).order_by('-is_root_ticket')
+    gexf = Gexf('Sample','Testting Sigma JS')
+    graph = gexf.addGraph('directed','static','a test graph')
+    graph.addNodeAttribute('xcoord','0',"float")
+    graph.addNodeAttribute('ycoord','0',"float")
+    graph.addNodeAttribute('label','',"string")
+    coords = r.graph()
+    for i,t in enumerate(tl):
+        n = graph.addNode(t.id,t.hash)
+        n.addAttribute(0,str(coords[i][0]))
+        n.addAttribute(1,str(coords[i][1]))
+        n.addAttribute(2,t.hash)
+        if t.parent_ticket_id>0:
+            graph.addEdge(t.id,t.id,t.parent_ticket_id)
+    response = etree.tostring(gexf.getXML(),pretty_print=True,encoding='utf-8',xml_declaration=True)
+    print response
     return HttpResponse(response, content_type="application/json")
 
 def test_countdown(request):

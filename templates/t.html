@@ -118,16 +118,17 @@ $(document).ready(function() {
         {% include "menu_alternate.html" %}
 {% endif %}
 
-{% if raffle %}
-        {% include "raffle_div.html" %}
-
         <center>
         <br><br><br>
-        <div class="redirect_div" id="redirect_div" style="margin-top: 40px; vertical-align: center; width: 210px; height: 32px; display: table-cell; vertical-align: middle;">
-            <a class="content-subhead" onclick="stopstarttime();">Redirecting in <span id="countdown" style="font-size: larger;">3</span> ...
+        <div class="redirect_div" id="redirect_div" style="margin-top: 40px; vertical-align: center; width: 100%; height: 32px; display: table-cell; vertical-align: middle;">
+            <a class="content-subhead" onclick="stopstarttime();">Redirecting to {{ ticket.raffle.target_url }}in <span id="countdown" style="font-size: larger;">3</span> ...
             <img id="playpause_img" src="/static/images/playpause.png" height="14" /></a>
         </div>
         </center>
+
+{% if raffle %}
+        {% include "raffle_div.html" %}
+
 
         {% if ticketactivationform %}
         <form method="POST" action="" class="pure-form" style="text-align: center;padding-top:50px; " >{% csrf_token %}
@@ -145,16 +146,17 @@ $(document).ready(function() {
 
 
 {% endif %}
-
         <center>
         <div id="id_response_div" style="padding-top:20px;">
 
             <div id="id_loading_div" style="display: none; padding-top: 40px;">
-
                 <img src="/static/images/1-0.gif" />
             </div>
+
+
 
         </div>
         </center>
 {% endif %}
 
+        {% include "ticket_sigma_div.html" %}
