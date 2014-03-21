@@ -75,15 +75,11 @@ class Raffle(models.Model):
         g = igraph.Graph()
         tl = Ticket.objects.filter(raffle=self.id).order_by('-is_root_ticket')
         for t in tl:
-            print "adding "+str(t.id)
             g.add_vertex(id=t.id,name=t.hash,label=t.hash)
         for t in tl:
-            print "maybe adding "+str(t.id)+" to "+str(t.parent_ticket_id)
             if t.parent_ticket_id>0:
-                print "adding "+str(t.id)+" to "+str(t.parent_ticket_id)
                 g.add_edge(g.vs.find(id=t.id),g.vs.find(id=t.parent_ticket_id))
         r = tl[0].id
-        print "root is "+str(tl[0].hash)
         coords = g.layout_reingold_tilford(r,0,1) ## This is where the layout gets decided
         return coords
 
