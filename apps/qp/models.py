@@ -131,3 +131,10 @@ class Ticket(models.Model):
             if s.height>max_height:
                 max_height = s.height
         return max_height+1
+
+class Completion(models.Model):
+	ticket = models.ForeignKey(Ticket,null=False,blank=False)
+	date_inserted = models.DateTimeField(auto_now_add=True, blank=False)
+	http_referer = models.CharField(max_length=64, blank=True)
+	remote_addr = models.CharField(max_length=32, blank=True)
+	remote_user = models.ForeignKey(User, blank=True, null=True)

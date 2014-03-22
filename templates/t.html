@@ -7,6 +7,7 @@
         $("#ajax_ticket_activation_button").click(function() {
             var input_string = $("#id_activation_email").val();
             var raffle_id = $("#raffle_id").val();
+            var parent_ticket_id = $("#parent_ticket_id").val();
             document.getElementById("id_loading_div").style.display = 'block';
             $.ajax({
                 url : "/ticket_activation_json/"+raffle_id+"/",
@@ -14,6 +15,7 @@
                 dataType: "json",
                 data : {
                     client_response : input_string,
+                    parent_ticket_id : parent_ticket_id,
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success : function(json) {
@@ -50,7 +52,7 @@
 
     });
 
-    var time_left = 3;
+    var time_left = 5;
     var cinterval;
     var timestatus=1;
 
@@ -79,7 +81,7 @@
 
     function defaultstart()
     {
-        time_left = 3;
+        time_left = 5;
         clearInterval(cinterval);
         cinterval = setInterval('time_dec()', 1000);
     }
@@ -100,11 +102,28 @@
             timestatus=1;
         }
     }
+
+    function stoptime()
+    {
+        clearInterval(cinterval);
+        timestatus=0;
+    }
+
+    function click_content()
+    {
+        stoptime();
+        $('#content').css('border-top','1px');
+        $('#content').css('border-left','1px');
+        $('#content').css('border-right','1px');
+    }
 </script>
 
 <style type="text/css">
     .redirect_div {cursor:pointer;}
     .redirect_div:hover {background-color:#FAFAFA;}
+
+    .content {cursor: pointer;}
+    .content:hover { background-color:#FAFAFA;}
 </style>
 
 {% if request.user.is_active %}
@@ -114,12 +133,16 @@
 {% endif %}
 
 <center>
-<div class="redirect_div" id="redirect_div" style="padding-top: 30px; padding-bottom: 30px; vertical-align: center; width: 100%; height: 32px; display: table-cell; vertical-align: middle;">
-    <a class="content-subhead" onclick="stopstarttime();">Redirecting to  <h3 style="display:inline;"><a href="{{ ticket.raffle.target_url }}">{{ ticket.raffle.target_url }}</a></h1>  in <span id="countdown" style="font-size: 42px;">3</span> ...
+<div class="redirect_div" id="redirect_div" onclick="stopstarttime();" style="padding-top: 50px; padding-bottom: 50px; vertical-align: center; width: 100%; height: 32px; display: table-cell; vertical-align: middle;">
+    <a class="content-subhead">Redirecting to
+        <h3 style="display:inline; padding-right: 20px; padding-left: 20px;">
+        <a href="{{ ticket.raffle.target_url }}">{{ ticket.raffle.target_url }}</a></h3>
+        in <span id="countdown" style="font-size: 42px;">5</span> ...
     <img id="playpause_img" src="/static/images/playpause.png" height="14" /></a>
 </div>
 </center>
 
+<div class="content" id="content" onclick="click_content();" style="padding-bottom: 50px;">
 {% if raffle %}
     {% include "raffle_div.html" %}
     {% if ticketactivationform %}
@@ -127,6 +150,7 @@
             <fieldset class="pure-group">
                 <center>
                     <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
+                    <input type="hidden" id="parent_ticket_id" value="{{ ticket.id }}" />
                     <legend class="pure-legend" >Get clicks via your shortlink to win the above prize!</legend>
                     {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Email" }}
                 </center>
@@ -140,7 +164,6 @@
 
     <center>
     <div id="id_response_div" style="padding-top:20px;">
-
         <div id="id_loading_div" style="display: none; padding-top: 40px;">
             <img src="/static/images/1-0.gif" />
         </div>
@@ -149,3 +172,5 @@
 {% endif %}
 
 {% include "ticket_sigma_div.html" %}
+
+</div>

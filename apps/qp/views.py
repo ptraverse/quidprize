@@ -256,13 +256,13 @@ def ticket(request, ticket_id):
         if t.activation_email == request.user.email: #if this user owns this ticket
             return render(request, 'yours.html', {'ticket':t, 'raffle':r, })
         else:
-            try:
+            try: #try and get this users ticket for this raffle
                 t2 = Ticket.objects.get(activation_email=request.user.email, raffle=r)
                 return render(request, 'not_yours.html', {'ticket':t, 'owned_ticket':t2, 'raffle':r, })
-            except Ticket.DoesNotExist: # user does not own one in this raffle
+            except Ticket.DoesNotExist: # user does not own one in this raffle, show this ticket
                 taf = TicketActivationForm()
                 return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
-    else:
+    else: # not logged in
         taf = TicketActivationForm()
         return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
 
@@ -335,6 +335,8 @@ def ticket_activation_json(request,raffle_id):
             tid_url = tid_url + str(ticket.id)
             response = bitly.shorten(tid_url)
             ticket.hash = response['hash']
+            pt = Ticket.objects.get(id=request.POST.get('parent_ticket_id'))
+            ticket.parent_ticket = pt
             ticket.save()
             url = response['url']
             status = 'new'
@@ -343,7 +345,6 @@ def ticket_activation_json(request,raffle_id):
         response_dict = {}
         response_dict.update({'hash': ticket.hash,'url':url,'status':status  })
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
-
     else:
         print(request.POST)
         return render(request, '500.html', {'message':'request post missing key "client response"'})
