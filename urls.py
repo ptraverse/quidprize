@@ -9,7 +9,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     url(r'^b/(.*)$', 'apps.qp.views.business'),
+    url(r'^beta_new_raffle/$', 'apps.qp.views.beta_new_raffle'),
     url(r'^business_create/$', 'apps.qp.views.business_create'),
+    url(r'^completion_logger/$', 'apps.qp.views.completion_logger'),
     url(r'^log_in/$','apps.qp.views.log_in'),
     url(r'^log_out/$','apps.qp.views.log_out'),
     url(r'^raffle/$','apps.qp.views.raffle'),

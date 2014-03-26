@@ -1,11 +1,25 @@
 {% include "base.html" %}
+{% load widget_tweaks %}
 
 {% include "menu.html" %}
 
-<center><a href="/raffle/">New Raffle</a>
+{% if raffleform %}
+        <form method="POST" action="/beta_new_raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
+        <fieldset class="pure-group"><center>
+        <legend class="pure-legend" >Create Raffle</legend>
+        {{ raffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }}
+        {{ raffleform.expiry_date|attr:"class:pure-input-1-4"|attr:"placeholder:Expiry Date"|attr:"type:hidden"|attr:"value:'0000-00-00 00:00:00'" }}
+        {{ raffleform.legal_agreement|attr:"id:legal_id"|attr:"type:hidden"|attr:"checked:checked" }}
+        </center>
+        </fieldset>
+         <button type="submit" class="pure-button pure-input-1-4 ">Create Raffle</button>
+        </form>
+{% endif %}
 
+        <center>
 {% if rafflelist %}
-        <table class="pure-table pure-table-bordered pure-table-striped">
+
+        <table class="pure-table pure-table-bordered pure-table-striped" style="margin-top: 60px;">
          <tr>
             <th>
                 Business

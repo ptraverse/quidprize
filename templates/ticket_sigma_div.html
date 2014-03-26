@@ -3,36 +3,50 @@
 <script type="text/javascript" src="/static/js/plugins/sigma.parsers.gexf.min.js"></script>
 <script>
 
-  sigma.parsers.gexf(
+    function NodeClick(event)
+    {
+        console.log("Node Clicked!!");
+        console.log(event);
+    }
+
+    sigma.parsers.gexf(
     '../sigma_gexf/{{ ticket.hash }}/',
     { // Here is the ID of the DOM element that
       // will contain the graph:
       container: 'sigma-container',
       settings: {
         defaultNodeColor: '#C0C0C0',
-        mouseEnabled: false
+        doubleClickEnabled: false
+
       }
     },
     function(s) {
-        console.log(s);
         var i=0;
         s.graph.nodes().forEach(function(n) {
             n.x = n['attributes']['xcoord'];
             n.y = n['attributes']['ycoord'];
             n.label = n['attributes']['label'];
-            n.size = 1.5;
+            n.size = n['attributes']['completion_size'];
+            n.size = n.size+1;
             {% if ticket %}
             if ( n.label=="{{ ticket.hash }}" )
             {
-                console.log("FOUND THE ONE");
                 n.color = '#000000';
             }
             {% endif %}
             i++;
         });
+        console.log(" preon clicked" );
+        s.bind('downnodes', function onClick(event) {
+            console.log(" on clicked" );
+        });
+        console.log("post    on clicked" );
         s.refresh();
     }
+
   );
+
+
 </script>
 
 
@@ -49,3 +63,7 @@
   </style>
   <div id="sigma-container"></div>
 </div>
+</div>
+
+<div id="debug" class="debug" style="border: 1px solid red">Debug</div>
+        <div>

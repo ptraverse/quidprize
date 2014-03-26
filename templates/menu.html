@@ -2,28 +2,35 @@
 
 
 
-<div class="pure-menu pure-menu-open " style="background: none repeat scroll 0 0; position: fixed; width: 160px; top:0;bottom:0; background-color: #E6E6E6; font-color: white;  ">
+<div class="pure-menu pure-menu-open " style="background: none repeat scroll 0 0; position: fixed; width: 160px; top:0;bottom:0; background-color: white; font-color: white;  ">
 
-    <div style="background-color: #E6E6E6; text-align: center; height:40px; ">
+    <div style="background-color: white; text-align: center; height:8.5%; ">
         <a href="/">
             <img src="/static/images/qptransp.png" style="height: 40px; padding-top: 4px;">
         </a>
     </div>
 
-    <ul style="text-align:center;">
-        <li class="pure-menu-heading" style="padding-top: 12px; padding-bottom: 12px;">
+    <ul style="text-align:center;background-color: white;">
+        <li class="pure-menu-heading" style="height: 4% ;background-color: white;">
             <center>{{ request.user.email }}</center>
         </li>
-        <li><a href="/raffles/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#70A9F4'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Raffles</a></li>
-        <li><a href="/tickets/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#70F47F'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Tickets</a></li>
+        <li><a href="/home/" style="background-color: white;padding-top: 25%; padding-bottom: 25%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Home</a>
+        <!--<li class="pure-menu-heading"></li></li>-->
+        <li><a href="/raffles/" style="background-color: white;padding-top: 25%; padding-bottom: 25%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Raffles</a>
+        <!--<li class="pure-menu-heading"></li></li>-->
+        <li><a href="/tickets/" style="background-color: white;padding-top: 25%; padding-bottom: 25%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Tickets</a>
+        <!--<li class="pure-menu-heading"></li></li>-->
 
+        <li>
+            <a href="" style="background-color: white;padding-top: 80%; padding-bottom: 80%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'"></a></li>
+        </li>
 
         {% if business %}
         <li class="pure-menu-heading">{{ business.name }}</li>
         <li><a href="../create-raffle/">Create Raffle</a></li>
         {% endif %}
 
-        <li class="pure-menu-heading"></li>
-            <li><a href="/log_out/" style="padding-top: 36px; padding-bottom: 36px;" onMouseOver="this.style.backgroundColor='#F5F573'" onMouseOut="this.style.backgroundColor='#E6E6E6'">Log Out</a></li>
+
+        <li><a href="/log_out/" style="background-color: white;vertical-align: bottom; padding-top: 25%; padding-bottom: 25%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Log Out</a></li>
     </ul>
 </div>

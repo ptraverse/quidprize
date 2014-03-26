@@ -21,6 +21,19 @@ import bitly_api
 from gexf import Gexf, GexfImport
 from lxml import etree
 
+def beta_new_raffle(request):
+    if request.method == 'POST': # If the form has been submitted...
+        form = RaffleForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+            return HttpResponseRedirect('/thanks/') # Redirect after POST
+        else:
+            return render(request,'raffles.html',{'raffleform':form})
+    else:
+        msg = 'beta_without_post notImplemented'
+    return render(request, '500.html', {'message':msg})
+
 def business_create(request):
     if request.method == 'POST': # If the form has been submitted...
         form = BusinessForm(request.POST) # A form bound to the POST data
@@ -41,6 +54,21 @@ def business(request,business_name):
     r = rl[0]
     taf = TicketActivationForm()
     return render(request, 'b.html', {'business': b, 'raffle':r, 'ticketactivationform':taf})
+
+def completion_logger(request):
+    tid = request.GET.get('ticket_id')
+    hr = request.META.get('HTTP_REFERER')
+    ra = request.META.get('REMOTE_ADDR')
+    ruid = request.GET.get('user_id')
+    c = Completion.objects.create(ticket=Ticket.objects.get(id=tid))
+    c.http_referer = hr
+    c.remote_addr = ra
+    if (ruid is not None):
+        c.remote_user = User.objects.get(id=ruid)
+    c.save()
+    response_dict = {}
+    response_dict.update({'success': 1 })
+    return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
 
 def index(request):
     if not request.user.is_authenticated():
@@ -71,7 +99,7 @@ def log_in(request):
         try:
             username = User.objects.get(email=login_email)
         except User.DoesNotExist:
-            return HttpResponseRedirect('../register')
+            return HttpResponseRedirect('../register/')
         user = authenticate(username=username, password=login_password)
         if user is not None:
             if user.is_active:
@@ -113,7 +141,8 @@ def raffle(request):
 
 def raffles(request):
     rafflelist = Raffle.objects.all()
-    return render(request, 'raffles.html', {'rafflelist':rafflelist} )
+    rf = RaffleForm()
+    return render(request, 'raffles.html', {'rafflelist':rafflelist, 'raffleform':rf} )
 
 def raffle_email(request, raffle_id, activation_email):
     t = Ticket.objects.filter(raffle=raffle_id).filter(activation_email=activation_email) #probably ways to optimise this
@@ -139,6 +168,8 @@ def register(request):
             business = bf.save(commit=False)
             business.user = user
             business.save()
+            userauth = authenticate(username=user, password=uf.cleaned_data['password'])
+            login(request, userauth)
         elif uf.is_valid():
             user = uf.save(commit=False)
             import random
@@ -148,6 +179,8 @@ def register(request):
             user.password = '%s$%s$%s' % (algo, salt, hsh)
             user.email = user.username
             user.save()
+            userauth = authenticate(username=user, password=uf.cleaned_data['password'])
+            login(request, userauth)
         else:
             print(uf.errors)
             print(bf.errors)
@@ -190,17 +223,19 @@ def sigma_gexf(request, ticket_hash):
     graph.addNodeAttribute('xcoord','0',"float")
     graph.addNodeAttribute('ycoord','0',"float")
     graph.addNodeAttribute('label','',"string")
+    graph.addNodeAttribute('completion_size','1',"float")
     coords = r.graph()
     for i,t in enumerate(tl):
         n = graph.addNode(t.id,t.hash)
         n.addAttribute(0,str(coords[i][0]))
         n.addAttribute(1,str(coords[i][1]))
         n.addAttribute(2,t.hash)
+        cs = t.completion_count()
+        n.addAttribute(3,str(cs))
     for t in tl:
         if t.parent_ticket_id>0:
             graph.addEdge(t.id,t.id,t.parent_ticket_id)
     response = etree.tostring(gexf.getXML(),pretty_print=True,encoding='utf-8',xml_declaration=True)
-    print response
     return HttpResponse(response, content_type="application/json")
 
 def sigma_test_gexf(request):
@@ -260,7 +295,7 @@ def ticket(request, ticket_id):
                 t2 = Ticket.objects.get(activation_email=request.user.email, raffle=r)
                 return render(request, 'not_yours.html', {'ticket':t, 'owned_ticket':t2, 'raffle':r, })
             except Ticket.DoesNotExist: # user does not own one in this raffle, show this ticket
-                taf = TicketActivationForm()
+                taf = TicketActivationForm(initial={'activation_email':request.user.email})
                 return render(request, 't.html', {'ticket':t, 'raffle':r, 'ticketactivationform':taf})
     else: # not logged in
         taf = TicketActivationForm()

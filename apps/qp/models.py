@@ -131,6 +131,8 @@ class Ticket(models.Model):
             if s.height>max_height:
                 max_height = s.height
         return max_height+1
+    def completion_count(self):
+        return Completion.objects.filter(ticket=self).count()
 
 class Completion(models.Model):
 	ticket = models.ForeignKey(Ticket,null=False,blank=False)
