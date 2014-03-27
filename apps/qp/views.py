@@ -1,6 +1,8 @@
 import socket
 import sys
 from datetime import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,11 +17,13 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponseRedirect
 from django.utils import simplejson
 
+
 from apps.qp.forms import *
 import owly_api
 import bitly_api
 from gexf import Gexf, GexfImport
 from lxml import etree
+
 
 def beta_new_raffle(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -72,6 +76,7 @@ def completion_logger(request):
 
 def index(request):
     if not request.user.is_authenticated():
+        logger.info("Index Visit!")
         return render(request, 'index.html')
     else:
         return render(request, 'user_home.html', {'request_user':request.user } )
@@ -156,7 +161,7 @@ def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST)
         bf = BusinessForm(request.POST)
-        if uf.is_valid() * bf.is_valid():
+        if (uf.is_valid() and bf.is_valid()):
             user = uf.save(commit=False)
             import random
             algo = 'sha1'
@@ -168,8 +173,10 @@ def register(request):
             business = bf.save(commit=False)
             business.user = user
             business.save()
+            logmsg = "New Business "+business.name+" Created: "+business.contact_person+" "+business.contact_person
+            logger.info(logmsg) #log for immediate response in R.L.
+            print logmsg
             userauth = authenticate(username=user, password=uf.cleaned_data['password'])
-            login(request, userauth)
         elif uf.is_valid():
             user = uf.save(commit=False)
             import random
@@ -179,6 +186,8 @@ def register(request):
             user.password = '%s$%s$%s' % (algo, salt, hsh)
             user.email = user.username
             user.save()
+            logmsg = "New User "+user.username+" Created"
+            logger.info(logmsg) #log for immediate response in R.L.
             userauth = authenticate(username=user, password=uf.cleaned_data['password'])
             login(request, userauth)
         else:
