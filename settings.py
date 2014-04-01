@@ -28,7 +28,7 @@ STATIC_URL = '/static/'
 SESSION_COOKIE_AGE = 600 #10mins in seconds
 
 ADMINS = (
-    # ('Philippe Traverse', 'philippe.traverse@gmail.com'),
+	('Philippe Traverse', 'philippe.traverse@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -144,7 +144,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+            'filename': '/home/philippe/workspace/quidprize/debug.log',
             'formatter': 'verbose'
         }
     },

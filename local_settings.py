@@ -1,3 +1,11 @@
+SECRET_KEY = 'QUIDasdfasdfasdfasdfPRIZE'
 
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+ALLOWED_INCLUDE_ROOTS = []
+
+APPEND_SLASH = True
 
 

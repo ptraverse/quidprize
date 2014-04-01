@@ -86,6 +86,6 @@
 
 
 # Sigma JS Test
-from apps.qp.models import *
-r = Raffle.objects.get(id=58)
-r.graph()
+#from apps.qp.models import *
+#r = Raffle.objects.get(id=58)
+#r.graph()
