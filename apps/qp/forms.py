@@ -1,5 +1,6 @@
 from django import forms
 from apps.qp.models import *
+from django.core.validators import *
 
 class BusinessForm(forms.ModelForm):
 	class Meta:
@@ -13,7 +14,13 @@ class DocumentForm(forms.Form):
     )
 
 class RaffleForm(forms.ModelForm):
-    legal_agreement = forms.BooleanField()
+    class Meta:
+        model = Raffle
+        fields = ['target_url','expiry_date']
+
+class BetaRaffleForm(forms.ModelForm):
+    contact_name = forms.CharField()
+    contact_phone = forms.CharField()
     class Meta:
         model = Raffle
         fields = ['target_url','expiry_date']
@@ -34,4 +41,15 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username','password']
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        username_confirm = self.cleaned_data.get('username_confirm')
+        password = self.cleaned_data.get('password')
+        password_confirm = self.cleaned_data.get('password_confirm')
+        validate_email(username)
+        if username and username != username_confirm:
+            raise forms.ValidationError("Emails don't match")
+        if password and password != password_confirm:
+            raise forms.ValidationError("Passwords don't match")
+        return self.cleaned_data
         

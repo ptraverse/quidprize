@@ -2,3 +2,20 @@ span.helptext
 {
     display: none;
 }
+
+a:active, a:visited, a:link
+{
+    color: mediumblue;
+    /*font-weight: bold;*/
+    text-decoration:none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+a.menu:active, a.menu:visited, a.menu:link
+{
+    color: black;
+}

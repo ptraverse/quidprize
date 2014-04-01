@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^tid/(.*)/$','apps.qp.views.ticket_id'),
     url(r'^tr/(.*)$','apps.qp.views.ticket_redirect'),
     url(r'^t/(.*)$','apps.qp.views.ticket_redirect'),
+    url(r'^thanks/$','apps.qp.views.thanks'),
     url(r'^tickets/$','apps.qp.views.tickets'),
     url(r'^ticket_activation/(.*)/$','apps.qp.views.ticket_activation'), # change this to something nice later
     url(r'^ticket_activation_json/(.*)/$','apps.qp.views.ticket_activation_json'), # change this to something nice later
@@ -36,6 +37,8 @@ urlpatterns = patterns('',
     url(r'^sigma_test/$', 'apps.qp.views.sigma_test', name='sigma_test'),
     url(r'^sigma_test_json/$', 'apps.qp.views.sigma_test_json', name='sigma_test_json'),
     url(r'^sigma_test_gexf/$', 'apps.qp.views.sigma_test_gexf', name='sigma_test_gexf'),
+    url(r'^raffle_countdown_test/$', 'apps.qp.views.raffle_countdown_test', name='raffle_countdown_test'),
+
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

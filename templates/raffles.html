@@ -28,6 +28,9 @@
                 Target URL
             </th>
             <th>
+                Root Ticket
+            </th>
+            <th>
                 Expiry Date
             </th>
             <th>
@@ -38,6 +41,7 @@
         <tr>
             <td>{{ raffle.business.name }}</td>
             <td>{{ raffle.target_url }}</td>
+            <td><a href="/{{ raffle.root_ticket.hash }}">{{ raffle.root_ticket.hash }}</a></td>
             <td>{{ raffle.expiry_date }}</td>
             <td>{{ raffle.date_created }}</td>
         </tr>

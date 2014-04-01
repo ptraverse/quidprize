@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 
 <script>
-    $(document).ready(function() {
+    $('#redirect_div').ready(function() {
 
         $("#ajax_ticket_activation_button").click(function() {
             var input_string = $("#id_activation_email").val();
@@ -19,7 +19,7 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success : function(json) {
-                        $('#id_response_div').html("");
+
                         $('#id_response_div').append('<div>');
                         if (json.status=='new')
                         {
@@ -38,8 +38,8 @@
                     },
                     error : function(xhr,errmsg,err) {
                         alert(xhr.status + ": " + xhr.responseText);
-                        $('#id_response_div').append(xhr.status + ": " + xhr.responseText);
-                        $('#id_response_div').show();
+                        //$('#id_response_div').append(xhr.status + ": " + xhr.responseText);
+                        //$('#id_response_div').show();
                     }
                 });
             document.getElementById("id_activation_email").readOnly = true;
@@ -48,14 +48,23 @@
             return false;
         });
 
+        initCountdown()
         //defaultstart();
 
     });
 
+
+
+    function initCountdown()
+    {
+        var rd = new Date({{ raffle.expiry_date|date:'Y' }}, {{ raffle.expiry_date|date:'m' }} - 1, {{ raffle.expiry_date|date:'d' }} );
+        console.log(rd);
+        $('#raffle_countdown_div').countdown({ until: rd});
+    }
+
     var time_left = 5;
     var cinterval;
     var timestatus=1;
-
 
     function completion()
     {
@@ -66,22 +75,29 @@
                 dataType: "json",
                 data : {
                     ticket_id : {{ ticket.id }},
-                    user_id : {{ request.user.id }}
+                    user_id : {% if request.user.is_active %}
+                                {{ request.user.id }}
+                              {% else %}
+                                0
+                              {% endif %}
                     },
                     success : function(json) {
                         //Then do the redirect
-                        window.location.href="{{ raffle.target_url }}";
+                        nw = window.open('{{ raffle.target_url }}');
+
                     },
                     error : function(xhr,errmsg,err) {
+                        //console.log(xhr);
                         alert(xhr.status + ": " + xhr.responseText);
-                    }
+                    },
+                    async: false
                 });
     }
 
     function time_dec()
     {
         time_left--;
-        document.getElementById('countdown').innerHTML = time_left;
+        document.getElementById('countdown_span').innerHTML = time_left;
         if(time_left == 0)
         {
             clearInterval(cinterval);
@@ -166,7 +182,7 @@
     <a class="content-subhead">Redirecting to
         <h3 style="display:inline; padding-right: 20px; padding-left: 20px;">
         <a onclick="completion();" href="#">{{ ticket.raffle.target_url }}</a></h3>
-        in <span id="countdown" style="font-size: 42px;">5</span> ...
+        in <span id="countdown_span" style="font-size: 42px;">5</span> ...
     <img id="playpause_img" src="/static/images/playpause.png" height="14" /></a>
 </div>
 
@@ -180,11 +196,19 @@
                 <center>
                     <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
                     <input type="hidden" id="parent_ticket_id" value="{{ ticket.id }}" />
-                    <legend class="pure-legend" >Get clicks via your shortlink to win the above prize!</legend>
+                    <legend class="pure-legend" style="font-size: smaller; text-align: left; width: 25%;">
+                    <h4>How To Participate:</h4>
+                        <ol>
+                        <li>Enter your email
+                        <li>Use your shortlink to get clicks
+                        <li>Win the above prize by getting more clicks!
+                        <li>Get commission from your downline!
+                        </ol>
+                    </legend>
                     {% if request.user.is_active %}
-                        {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Email"|attr:"readonly" }}
+                        {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Enter Email"|attr:"readonly" }}
                     {% else %}
-                        {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Email" }}
+                        {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Enter Email" }}
                     {% endif %}
                 </center>
             </fieldset>
@@ -196,7 +220,7 @@
 
 
     <center>
-    <div class="id_response_div">
+    <div class="id_response_div" id="id_response_div">
         <div class="id_loading_div">
             <img src="/static/images/1-0.gif" />
         </div>
@@ -207,3 +231,4 @@
 {% include "ticket_sigma_div.html" %}
 
 </div>
+

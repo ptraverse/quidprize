@@ -16,7 +16,8 @@
       container: 'sigma-container',
       settings: {
         defaultNodeColor: '#C0C0C0',
-        doubleClickEnabled: false
+        doubleClickEnabled: false,
+        mouseEnabled: false
 
       }
     },
@@ -26,8 +27,7 @@
             n.x = n['attributes']['xcoord'];
             n.y = n['attributes']['ycoord'];
             n.label = n['attributes']['label'];
-            n.size = n['attributes']['completion_size'];
-            n.size = n.size+1;
+            n.size = 3;
             {% if ticket %}
             if ( n.label=="{{ ticket.hash }}" )
             {
@@ -36,11 +36,9 @@
             {% endif %}
             i++;
         });
-        console.log(" preon clicked" );
         s.bind('downnodes', function onClick(event) {
             console.log(" on clicked" );
         });
-        console.log("post    on clicked" );
         s.refresh();
     }
 
@@ -64,6 +62,3 @@
   <div id="sigma-container"></div>
 </div>
 </div>
-
-<div id="debug" class="debug" style="border: 1px solid red">Debug</div>
-        <div>

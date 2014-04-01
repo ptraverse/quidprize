@@ -8,7 +8,7 @@
 <form method="POST" action="" class="pure-form" class="register_form" style="text-align: center;" >{% csrf_token %}
 
     <fieldset class="pure-group"><center>
-        <legend class="pure-legend" >Individual</legend>
+        <legend class="pure-legend" >New User</legend>
         <!--<div class="hidden_legend" id="individual_legend">-->
             <!--<super>Individuals can participate in raffles.</super>-->
         <!--</div>-->
@@ -16,23 +16,24 @@
 		{{ userform.username_confirm|attr:"class:pure-input-1-4"|attr:"placeholder:Email Confirm" }}
 		{{ userform.password|attr:"type:password"|attr:"class:pure-input-1-4"|attr:"placeholder:Password" }}
 		{{ userform.password_confirm|attr:"type:password"|attr:"class:pure-input-1-4"|attr:"placeholder:Password Confirm" }}
-		
-		
+
+        <div style="color: red;">{{ userform.non_field_errors }}</div>
+
     <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
         
         <br><br>
         <br><br>
         
-        <legend class="pure-legend" >Business</legend>
+        <!--<legend class="pure-legend" >Business</legend>-->
         <!--<div class="hidden_legend" id="business_legend">-->
             <!--<super>Businesses can create raffles.</super>-->
         <!--</div>-->
-        {{ businessform.name|attr:"class:pure-input-1-4"|attr:"placeholder:Name" }}
-        {{ businessform.contact_person|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Person" }}
-        {{ businessform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Phone" }}        
-        <input type="file" accept="image/*" class="pure-input" name="logo" id="id_logo"/>
-        
-    <button type="submit" class="pure-button pure-input-1-4 ">Register</button>
+        <!--{{ businessform.name|attr:"class:pure-input-1-4"|attr:"placeholder:Name" }}-->
+        <!--{{ businessform.contact_person|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Person" }}-->
+        <!--{{ businessform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Phone" }}        -->
+        <!--<input type="file" accept="image/*" class="pure-input" name="logo" id="id_logo"/>-->
+        <!---->
+    <!--<button type="submit" class="pure-button pure-input-1-4 ">Register</button>-->
 
     </center></fieldset>
 </form>

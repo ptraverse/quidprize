@@ -19,24 +19,37 @@ from django.utils import simplejson
 
 
 from apps.qp.forms import *
+from apps.qp.models import *
 import owly_api
 import bitly_api
 from gexf import Gexf, GexfImport
 from lxml import etree
 
-
+@login_required
 def beta_new_raffle(request):
     if request.method == 'POST': # If the form has been submitted...
-        form = RaffleForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
+        brf = BetaRaffleForm(request.POST) # A form bound to the POST data
+        if brf.is_valid(): # All validation rules pass
             # Process the data in form.cleaned_data
             # ...
+            #use logger
+            r = brf.save(commit=False)
+            r.business_id='-1'
+            msg = "New Raffle Request. Phone Immediately : "
+            msg = msg + request.POST.get('contact_name') + ' @ '
+            msg = msg + request.POST.get('contact_phone') + ' | '
+            msg = msg + request.POST.get('target_url') + ' | '
+            msg = msg + request.POST.get('expiry_date') + ' | '
+            msg = msg + request.user.email
+            logger.info(msg)
+            print(brf)
             return HttpResponseRedirect('/thanks/') # Redirect after POST
         else:
-            return render(request,'raffles.html',{'raffleform':form})
+            return render(request,'beta_raffle.html',{'betaraffleform':brf})
     else:
-        msg = 'beta_without_post notImplemented'
-    return render(request, '500.html', {'message':msg})
+        brf = BetaRaffleForm()
+        return render(request,'beta_raffle.html',{'betaraffleform':brf})
+
 
 def business_create(request):
     if request.method == 'POST': # If the form has been submitted...
@@ -67,11 +80,11 @@ def completion_logger(request):
     c = Completion.objects.create(ticket=Ticket.objects.get(id=tid))
     c.http_referer = hr
     c.remote_addr = ra
-    if (ruid is not None):
+    if str(ruid) > '0':
         c.remote_user = User.objects.get(id=ruid)
     c.save()
     response_dict = {}
-    response_dict.update({'success': 1 })
+    response_dict.update({'success': True })
     return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
 
 def index(request):
@@ -146,8 +159,13 @@ def raffle(request):
 
 def raffles(request):
     rafflelist = Raffle.objects.all()
+    for r in rafflelist:
+        r.root_ticket = r.get_root_ticket()
     rf = RaffleForm()
     return render(request, 'raffles.html', {'rafflelist':rafflelist, 'raffleform':rf} )
+
+def raffle_countdown_test(request):
+    return render(request, 'raffle_countdown_test.html' );
 
 def raffle_email(request, raffle_id, activation_email):
     t = Ticket.objects.filter(raffle=raffle_id).filter(activation_email=activation_email) #probably ways to optimise this
@@ -192,7 +210,9 @@ def register(request):
             login(request, userauth)
         else:
             print(uf.errors)
+            print('---')
             print(bf.errors)
+            return render(request, 'register.html', {'userform':uf , 'businessform':bf } )
         return HttpResponseRedirect('/')
     else:
         uf = UserForm()
@@ -269,6 +289,9 @@ def sigma_test_gexf(request):
 
 def test_countdown(request):
     return render(request, 'countdown_test.html' )
+
+def thanks(request):
+    return render(request, 'thanks.html')
 
 def ticket_create(request):
     if request.method == 'POST':
@@ -374,6 +397,7 @@ def ticket_activation_json(request,raffle_id):
             API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
             ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
             bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+            print "connecting to bitly to get a new shortlink"
             tid_url = 'http://' + request.get_host()
             tid_url = tid_url + '/t/'
             tid_url = tid_url + str(ticket.id)

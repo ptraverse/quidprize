@@ -71,6 +71,9 @@ class Raffle(models.Model):
         self.draw_winner = winner
         self.draw_date = datetime.now()
         return winner
+    def get_root_ticket(self):
+        tl = Ticket.objects.filter(raffle=self.id).order_by('-is_root_ticket')
+        return tl[0]
     def graph(self):
         g = igraph.Graph()
         tl = Ticket.objects.filter(raffle=self.id).order_by('-is_root_ticket')
