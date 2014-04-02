@@ -32,7 +32,7 @@ class Document(models.Model):
         return filename
 
 class Raffle(models.Model):
-    business = models.ForeignKey(Business)
+    business = models.ForeignKey(Business,blank=True,null=True)
     target_url = models.CharField(max_length="64")
     date_created = models.DateTimeField()
     expiry_date = models.DateTimeField()

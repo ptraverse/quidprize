@@ -45,6 +45,7 @@ def beta_new_raffle(request):
             print(brf)
             return HttpResponseRedirect('/thanks/') # Redirect after POST
         else:
+            print brf.errors
             return render(request,'beta_raffle.html',{'betaraffleform':brf})
     else:
         brf = BetaRaffleForm()
@@ -136,6 +137,8 @@ def log_out(request):
     return HttpResponseRedirect('/')
 
 def raffle(request):
+    if request.method == 'POST':
+        return HttpResponseRedirect('/beta_new_raffle/')
     if request.method == 'POST':
         try:
             business = Business.objects.get(auth_user=request.user)
@@ -348,7 +351,7 @@ def ticket_redirect(request, ticket_id):
     return HttpResponseRedirect('/'+t.hash)
 
 def tickets(request):
-    m = ''
+    m = 'No Tickets yet'
     if request.user.is_active:
         try:
             tl = Ticket.objects.filter(activation_email=request.user.email)

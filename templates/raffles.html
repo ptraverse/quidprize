@@ -3,8 +3,15 @@
 
 {% include "menu.html" %}
 
+        <script type="text/javascript">
+             function go_to_beta()
+             {
+                window.location.replace("/beta_new_raffle/");
+             }
+        </script>
+
 {% if raffleform %}
-        <form method="POST" action="/beta_new_raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
+        <form method="POST" action="/raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
         <fieldset class="pure-group"><center>
         <legend class="pure-legend" >Create Raffle</legend>
         {{ raffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }}
@@ -12,7 +19,9 @@
         {{ raffleform.legal_agreement|attr:"id:legal_id"|attr:"type:hidden"|attr:"checked:checked" }}
         </center>
         </fieldset>
+            <a href="/beta_new_raffle/">
          <button type="submit" class="pure-button pure-input-1-4 ">Create Raffle</button>
+                </a>
         </form>
 {% endif %}
 

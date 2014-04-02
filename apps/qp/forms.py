@@ -1,6 +1,7 @@
 from django import forms
 from apps.qp.models import *
 from django.core.validators import *
+import re
 
 class BusinessForm(forms.ModelForm):
 	class Meta:
@@ -23,7 +24,18 @@ class BetaRaffleForm(forms.ModelForm):
     contact_phone = forms.CharField()
     class Meta:
         model = Raffle
-        fields = ['target_url','expiry_date']
+        fields = ['target_url','expiry_date','business']
+    def clean(self):
+        contact_phone = self.cleaned_data.get('username_confirm')
+        if contact_phone > '' and not re.match('[\d\s-]+',contact_phone):
+            raise forms.ValidationError("Invalid Phone Number")
+        target_url = self.cleaned_data.get('password')
+        url_validate = URLValidator()
+        url_validate(target_url)
+        expiry_date = self.cleaned_data.get('password_confirm')
+        print 'buzs'
+        print self.cleaned_data.get('business')
+        return self.cleaned_data
 
 class TicketForm(forms.ModelForm):
     class Meta:

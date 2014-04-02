@@ -3,21 +3,35 @@
 
 {% include "menu.html" %}
 
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css" >
+    <script type="text/javascript" src="/static/js/plugins/jquery.datetimepicker.js"></script>
+<script type="text/javascript">
+
+    $(document).ready( function() {
+        console.log("foo");
+        $('#id_expiry_date').datetimepicker({
+            format: "Y-m-d H:i:s"
+        });
+        console.log("bar");
+    });
+
+</script>
+
 {% if betaraffleform %}
+      <center>
         <form method="POST" action="/beta_new_raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
-        <fieldset class="pure-group"><center>
-        <legend class="pure-legend" >Create Raffle</legend>
-        {{ betaraffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }}
-        {{ betaraffleform.expiry_date|attr:"class:pure-input-1-4"|attr:"placeholder:Expiry Date" }}
-        {{ betaraffleform.contact_name|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Name" }}
-        {{ betaraffleform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Number" }}
-
-
-        </center>
-
+        <fieldset class="pure-group">
+            <center>
+            <legend class="pure-legend" >Create Raffle</legend>
+            {{ betaraffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }} {{ betaraffleform.target_url.errors }}
+            {{ betaraffleform.expiry_date|attr:"class:pure-input-1-4 id_expiry_date"|attr:"placeholder:Expiry Date" }} {{ betaraffleform.expiry_date.errors }}
+            {{ betaraffleform.contact_name|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Name" }} {{ betaraffleform.contact_name.errors }}
+            {{ betaraffleform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Number" }} {{ betaraffleform.contact_phone.errors }}
+            {{ betaraffleform.business|attr:"class:pure-input-1-4"|attr:"value:1"|attr:"style:display:none;" }}
+            </center>
         </fieldset>
          <button type="submit" class="pure-button pure-input-1-4 ">Create Raffle</button>
-
-            <div style="color: red;">{{ betaraffleform.non_field_errors }}</div>
         </form>
+
+      </center>
 {% endif %}

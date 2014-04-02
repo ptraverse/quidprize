@@ -25,7 +25,8 @@ STATIC_ROOT = '/home/philippe/workspace/quidprize/media'
 STATIC_URL = '/static/'
 
 
-SESSION_COOKIE_AGE = 600 #10mins in seconds
+SESSION_COOKIE_AGE = 1200 #20mins in seconds
+LOGIN_URL = '/'
 
 ADMINS = (
 	('Philippe Traverse', 'philippe.traverse@gmail.com'),
