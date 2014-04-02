@@ -1,6 +1,13 @@
 {% include "base.html" %}
 
+<script type="text/javascript">
+    var email = '{{ request.user.email }}';
+    var ar=email.split('@');
+    var short_email = new String(ar[0]);
+    console.log(short_email);
+    $('#user_email_short').append("<div>fooooo</div>");
 
+</script>
 
 <div class="pure-menu pure-menu-open " style="background: none repeat scroll 0 0; position: fixed; width: 160px; top:0;bottom:0; background-color: white; font-color: white;  ">
 
@@ -12,7 +19,7 @@
 
     <ul style="text-align:center;background-color: white; height: 100%;">
         <li class="pure-menu-heading" style="height: 4% ;background-color: white;">
-            <center>{{ request.user.email }}</center>
+            <center><div id="user_email_short" class="user_email_short" style="overflow:hidden;">{{ request.user.email }}</div></center>
         </li>
         <li><a class="menu" href="/" style="padding-top: 20%; padding-bottom: 20%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Home</a>
         <li><a class="menu" href="/raffles/" style="padding-top: 20%; padding-bottom: 20%;" onMouseOver="this.style.backgroundColor='#FAFAFA'" onMouseOut="this.style.backgroundColor='#FFFFFF'">Raffles</a>
