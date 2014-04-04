@@ -90,7 +90,9 @@ def completion_logger(request):
 
 def index(request):
     if not request.user.is_authenticated():
-        logger.info("Index Visit!")
+        msg = "Index Visit from "
+        msg = msg + str(request.META['REMOTE_ADDR'])
+        logger.info(msg)
         return render(request, 'index.html')
     else:
         return render(request, 'user_home.html', {'request_user':request.user } )

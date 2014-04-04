@@ -49,7 +49,10 @@
         });
 
         initCountdown()
-        //defaultstart();
+
+        {% if not settings.DEBUG %}
+            defaultstart();
+        {% endif %}
 
     });
 
