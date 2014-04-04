@@ -2,6 +2,8 @@
 {% load widget_tweaks %}
 
 <script>
+
+
     $('#redirect_div').ready(function() {
 
         $("#ajax_ticket_activation_button").click(function() {
@@ -19,27 +21,25 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success : function(json) {
-
-                        $('#id_response_div').append('<div>');
+                        document.getElementById("id_loading_div").style.display = 'none';
                         if (json.status=='new')
                         {
-                            $('#id_response_div').append('<pre>Your new shortlink is:</pre>');
+                            $('#id_response_message').html('Your new shortlink is:<br><br>');
                         }
                         else if (json.status=='existing')
                         {
-                            $('#id_response_div').append('<pre>This email already has a shortlink:</pre>');
+                            $('#id_response_message').html('This email already has a shortlink:<br><br>');
                         }
-                        $('#id_response_div').append('<a href="http://bit.ly/'+json.hash+'">http://bt.ly/'+json.hash+'</a>');
+                        $('#id_response_message').append('<a href="http://bit.ly/'+json.hash+'">http://bt.ly/'+json.hash+'</a>');
                         if (json.status=='existing')
                         {
-                            $('#id_response_div').append('<pre> Please login to view stats</pre>');
+                            $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
                         }
-                        $('#id_response_div').append('</div>');
                     },
                     error : function(xhr,errmsg,err) {
                         alert(xhr.status + ": " + xhr.responseText);
-                        //$('#id_response_div').append(xhr.status + ": " + xhr.responseText);
-                        //$('#id_response_div').show();
+                        $('#id_response_div').html(xhr.status + ": " + xhr.responseText);
+                        $('#id_response_div').show();
                     }
                 });
             document.getElementById("id_activation_email").readOnly = true;
@@ -183,7 +183,6 @@
         <h3 style="display:inline; padding-right: 20px; padding-left: 20px;">
         <a onclick="completion();" href="#">{{ ticket.raffle.target_url }}</a></h3>
         in <span id="countdown_span" style="font-size: 42px;">5</span> ...
-    <img id="playpause_img" src="/static/images/playpause.png" height="14" /></a>
 </div>
 
 
@@ -218,14 +217,19 @@
         </form>
     {% endif %}
 
-
     <center>
-    <div class="id_response_div" id="id_response_div">
-        <div class="id_loading_div">
-            <img src="/static/images/1-0.gif" />
+        <div id="id_response_div" style="padding-top:20px; height: 150px;">
+
+            <div id="id_loading_div" style="display: none; padding-top: 40px; ">
+                <img src="/static/images/1-0.gif" />
+            </div>
+            <div id="id_response_message" class="id_response_message">
+            </div>
+            <div id="id_response_url" class="id_response_url">
+            </div>
         </div>
-    </div>
     </center>
+
 {% endif %}
 
 {% include "ticket_sigma_div.html" %}

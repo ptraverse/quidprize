@@ -389,6 +389,7 @@ def ticket_activation_json(request,raffle_id):
             ticket = Ticket.objects.get(raffle=raffle_id,activation_email=request.POST.get('client_response'))
             url = 'http://bit.ly/'+ticket.hash
             status = 'existing'
+            print "ticket activattion email already has ticket"
         except Ticket.DoesNotExist:
             ticket = Ticket.objects.create(raffle_id=raffle_id,date_activated = datetime.now())
             ticket.activation_email = request.POST.get('client_response')
