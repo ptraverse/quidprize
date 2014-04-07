@@ -1,18 +1,18 @@
 {% include "base.html" %}
 
-<br><br><br>
-<br><br><br>
+<div style="height: 100px;"></div>
 {% include "header.html" %}
-<br><br><br>
-<br><br><br>
+<div style="height: 100px;"></div>
 <form action="/log_in/" method="POST" id="log_in" class="pure-form" style="text-align: center;" >{% csrf_token %}
 
-    <fieldset class="pure-group"><center>
-	    <input type="email" name="log_in_email" id="log_in_email" class="pure-input-1-4" placeholder="Email" style="text-align: center;">
-        <input type="password" name="log_in_password" id="log_in_password" class="pure-input-1-4" placeholder="Password" style="text-align: center;">
-    </center></fieldset>
+    <fieldset class="pure-group">
+    <center>
+	    <input type="email" name="log_in_email" id="log_in_email" class="pure-input-1-4" placeholder="Email" style="text-align: center; min-width: 260px;">
+        <input type="password" name="log_in_password" id="log_in_password" class="pure-input-1-4" placeholder="Password" style="text-align: center;min-width: 260px;">
+    </center>
+    </fieldset>
 
-    <button type="submit" class="pure-button pure-input-1-4 ">Log In</button>
+    <button type="submit" class="pure-button pure-input-1-4" style="min-width: 260px;">Log In</button>
 </form>
 
 

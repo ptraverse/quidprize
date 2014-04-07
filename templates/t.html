@@ -50,7 +50,9 @@
 
         initCountdown()
 
-        {% if not settings.DEBUG %}
+        {% if settings.DEBUG %}
+            //defaultstart();
+        {% else %}
             defaultstart();
         {% endif %}
 
