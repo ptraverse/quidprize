@@ -10,3 +10,5 @@ sudo apt-get install python-lxml
 sudo apt-get install libxml2-dev
 sudo apt-get install libxslt1-dev 
 sudo apt-get install python2.6-dev
+sudo apt-get install libgeoip-dev
+sudo apt-get install libapache2-mod-geoip

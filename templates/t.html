@@ -3,7 +3,6 @@
 
 <script>
 
-
     $('#redirect_div').ready(function() {
 
         $("#ajax_ticket_activation_button").click(function() {
@@ -48,28 +47,92 @@
             return false;
         });
 
-        initCountdown()
-
         {% if settings.DEBUG %}
-            //defaultstart();
+            defaultstart();
         {% else %}
             defaultstart();
         {% endif %}
 
     });
 
+    var time_left = 5;
+    var raffle_date = new Date({{ raffle.expiry_date|date:'Y' }}, {{ raffle.expiry_date|date:'m' }} - 1, {{ raffle.expiry_date|date:'d' }} );
+    raffle_time = raffle_date.getTime()
+    var now = new Date();
+    nowtime = now.getTime();
+    var time_difference = Math.floor((raffle_time - nowtime)/1000);
+    var ftime_difference = formatSeconds(time_difference);
+    var cinterval;
+    var cinterval2;
+    var timestatus=1;
 
-
-    function initCountdown()
+    function time_dec()
     {
-        var rd = new Date({{ raffle.expiry_date|date:'Y' }}, {{ raffle.expiry_date|date:'m' }} - 1, {{ raffle.expiry_date|date:'d' }} );
-        console.log(rd);
-        $('#raffle_countdown_div').countdown({ until: rd});
+        time_left--;
+        document.getElementById('countdown_span').innerHTML = time_left;
+        if(time_left == 0)
+        {
+            clearInterval(cinterval);
+            completion();
+        }
     }
 
-    var time_left = 5;
-    var cinterval;
-    var timestatus=1;
+    function raffle_time_dec()
+    {
+        time_difference--;
+        var ftime_difference = formatSeconds(time_difference);
+        $('#raffle_countdown_span').html(ftime_difference);
+    }
+
+    function formatSeconds(secs)
+    {
+        var pad = function(n) {
+            return (n < 10 ? "0" + n : n);
+        };
+
+        var d = Math.floor(secs / 86400);
+        var h = Math.floor((secs / 86400) % 1 * 24);
+        var m = Math.floor((secs / 3600) % 1 * 60); // Remainder of an hour of seconds x 60
+        var s = Math.floor((secs / 60) % 1 * 60); // Remainder of a minute of seconds x 60
+
+        return pad(d) +" days "+ pad(h) +":"+ pad(m) +":"+ pad(s);
+    };
+
+    function resumetime()
+    {
+        clearInterval(cinterval);
+        cinterval = setInterval('time_dec()', 1000);
+    }
+
+    function defaultstart()
+    {
+        time_left = 10;
+        clearInterval(cinterval);
+        clearInterval(cinterval2);
+        cinterval = setInterval('time_dec()', 1000);
+        cinterval2 = setInterval('raffle_time_dec()', 1000);
+    }
+
+    function stopstarttime()
+    {
+        if(timestatus==1)
+        {
+            clearInterval(cinterval);
+            timestatus=0;
+        }
+        else
+        {
+            clearInterval(cinterval);
+            cinterval = setInterval('time_dec()', 1000);
+            timestatus=1;
+        }
+    }
+
+    function stoptime()
+    {
+        clearInterval(cinterval);
+        timestatus=0;
+    }
 
     function completion()
     {
@@ -88,7 +151,7 @@
                     },
                     success : function(json) {
                         //Then do the redirect
-                        nw = window.open('{{ raffle.target_url }}');
+                        nw = window.location.assign('{{ raffle.target_url }}');
 
                     },
                     error : function(xhr,errmsg,err) {
@@ -99,57 +162,37 @@
                 });
     }
 
-    function time_dec()
+    function content_completion()
     {
-        time_left--;
-        document.getElementById('countdown_span').innerHTML = time_left;
-        if(time_left == 0)
-        {
-            clearInterval(cinterval);
-            completion();
-        }
-    }
+        $.ajax({
+            url : "/completion_logger/",
+            type : "GET",
+            dataType: "json",
+            data : {
+                ticket_id : {{ ticket.id }},
+                user_id : {% if request.user.is_active %}
+                            {{ request.user.id }}
+                          {% else %}
+                            0
+                          {% endif %}
+                },
+                success : function(json) {
+                    //Then do the redirect
+                    nw = window.open('{{ raffle.target_url }}');
 
-    function resumetime()
-    {
-        //time_left = 50;
-        clearInterval(cinterval);
-        cinterval = setInterval('time_dec()', 1000);
-    }
-
-    function defaultstart()
-    {
-        time_left = 5;
-        clearInterval(cinterval);
-        cinterval = setInterval('time_dec()', 1000);
-    }
-
-    function stopstarttime()
-    {
-        if(timestatus==1)
-        {
-            clearInterval(cinterval);
-            //document.getElementById('stopbutton').value="Start";
-            timestatus=0;
-        }
-        else
-        {
-            clearInterval(cinterval);
-            cinterval = setInterval('time_dec()', 1000);
-            //document.getElementById('stopbutton').value="Stop";
-            timestatus=1;
-        }
-    }
-
-    function stoptime()
-    {
-        clearInterval(cinterval);
-        timestatus=0;
+                },
+                error : function(xhr,errmsg,err) {
+                    //console.log(xhr);
+                    alert(xhr.status + ": " + xhr.responseText);
+                },
+                async: false
+            });
     }
 
     function click_content()
     {
         stoptime();
+        content_completion();
         $('#content').css('border-top','1px');
         $('#content').css('border-left','1px');
         $('#content').css('border-right','1px');
@@ -188,10 +231,13 @@
         <h3 style="display:inline; padding-right: 20px; padding-left: 20px;">
         <a onclick="completion();" href="#">{{ ticket.raffle.target_url }}</a></h3>
         in <span id="countdown_span" style="font-size: 42px;">5</span> ...
+        <br><sub>Click to Skip</sub>
 </div>
 
 
+
 <div class="content" id="content" onclick="click_content();" style="padding-bottom: 50px;">
+
 {% if raffle %}
     {% include "raffle_div.html" %}
     {% if ticketactivationform %}
@@ -201,13 +247,14 @@
                     <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
                     <input type="hidden" id="parent_ticket_id" value="{{ ticket.id }}" />
                     <legend class="pure-legend" style="font-size: smaller; text-align: left; width: 25%;">
-                    <h4>How To Participate:</h4>
+                    <h4>How To Win:</h4>
                         <ol>
                         <li>Enter your email
                         <li>Use your shortlink to get clicks
-                        <li>Win the above prize by getting more clicks!
-                        <li>Get commission from your downline!
+                        <li>Earn free raffle entries for the above prize for each click you get!
+                        <li>Get commission entries from downline links and their clicks!
                         </ol>
+                        <center><a href="/legal.html">Terms and Conditions</a></center>
                     </legend>
                     {% if request.user.is_active %}
                         {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Enter Email"|attr:"readonly" }}
