@@ -55,7 +55,7 @@
 
     });
 
-    var time_left = 5;
+    var time_left = 10;
     var raffle_date = new Date({{ raffle.expiry_date|date:'Y' }}, {{ raffle.expiry_date|date:'m' }} - 1, {{ raffle.expiry_date|date:'d' }} );
     raffle_time = raffle_date.getTime()
     var now = new Date();
@@ -230,7 +230,7 @@
     <a class="content-subhead">Redirecting to
         <h3 style="display:inline; padding-right: 20px; padding-left: 20px;">
         <a onclick="completion();" href="#">{{ ticket.raffle.target_url }}</a></h3>
-        in <span id="countdown_span" style="font-size: 42px;">5</span> ...
+        in <span id="countdown_span" style="font-size: 42px;">10</span> ...
         <br><sub>Click to Skip</sub>
 </div>
 
@@ -241,7 +241,7 @@
 {% if raffle %}
     {% include "raffle_div.html" %}
     {% if ticketactivationform %}
-        <form method="POST" action="" class="pure-form" style="text-align: center;padding-top:50px; " >{% csrf_token %}
+        <form method="POST" action="" class="pure-form" style="text-align: center;" >{% csrf_token %}
             <fieldset class="pure-group">
                 <center>
                     <input type="hidden" id="raffle_id" value="{{ raffle.id }}" />
@@ -251,8 +251,8 @@
                         <ol>
                         <li>Enter your email
                         <li>Use your shortlink to get clicks
-                        <li>Earn free raffle entries for the above prize for each click you get!
-                        <li>Get commission entries from downline links and their clicks!
+                        <li>Increase your chances of winning with each click you get!
+                        <li>Get rewarded for downline links and their clicks too!
                         </ol>
                         <center><a href="/legal.html">Terms and Conditions</a></center>
                     </legend>
