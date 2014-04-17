@@ -54,9 +54,16 @@
         {% endif %}
 
         $( "#content" ).one( "click", function() {
-                console.log("doing it iva the one");
-                click_content();
-            });
+            click_content();
+        });
+
+         $( "#legal_dialog" ).dialog({
+            autoOpen: false,
+         });
+
+         $( "#terms" ).click(function() {
+            $( "#legal_dialog" ).dialog( "open" );
+         });
 
     });
 
@@ -264,7 +271,7 @@
                         <li>Increase your chances of winning with each click you get!
                         <li>Get rewarded for downline links and their clicks too!
                         </ol>
-                        <center><a href="/legal.html">Terms and Conditions</a></center>
+                        <center><a href="/legal/">Terms and Conditions</a></center>
                     </legend>
                     {% if request.user.is_active %}
                         {{ ticketactivationform.activation_email|attr:"class:pure-input-1-4"|attr:"placeholder:Enter Email"|attr:"readonly" }}
@@ -295,6 +302,7 @@
 {% endif %}
 
 {% include "ticket_sigma_div.html" %}
+
 
 </div>
 

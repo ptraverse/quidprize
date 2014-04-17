@@ -97,6 +97,9 @@ def index(request):
     else:
         return render(request, 'user_home.html', {'request_user':request.user } )
 
+def legal(request):
+    return render(request, 'legal.html');
+
 def list(request):
     # Handle file upload
     if request.method == 'POST':
