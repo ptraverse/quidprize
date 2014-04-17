@@ -48,12 +48,20 @@
         });
 
         {% if settings.DEBUG %}
-            defaultstart();
+            //defaultstart();
         {% else %}
-            defaultstart();
+            //defaultstart();
         {% endif %}
 
+        $( "#content" ).one( "click", function() {
+                console.log("doing it iva the one");
+                click_content();
+            });
+
     });
+
+
+
 
     var time_left = 10;
     var raffle_date = new Date({{ raffle.expiry_date|date:'Y' }}, {{ raffle.expiry_date|date:'m' }} - 1, {{ raffle.expiry_date|date:'d' }} );
@@ -197,6 +205,8 @@
         $('#content').css('border-left','1px');
         $('#content').css('border-right','1px');
     }
+
+
 </script>
 
 <style type="text/css">
@@ -236,7 +246,7 @@
 
 
 
-<div class="content" id="content" onclick="click_content();" style="padding-bottom: 50px;">
+<div class="content" id="content" style="padding-bottom: 50px;">
 
 {% if raffle %}
     {% include "raffle_div.html" %}

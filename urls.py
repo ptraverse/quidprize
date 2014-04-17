@@ -31,15 +31,6 @@ urlpatterns = patterns('',
     url(r'^$','apps.qp.views.index'),
 
 
-    #only in development!
-    # url(r'^list/$', 'apps.qp.views.list', name='list'),
-    # url(r'^countdown_test/$', 'apps.qp.views.test_countdown', name='countdown_test'),
-    # url(r'^sigma_test/$', 'apps.qp.views.sigma_test', name='sigma_test'),
-    # url(r'^sigma_test_json/$', 'apps.qp.views.sigma_test_json', name='sigma_test_json'),
-    # url(r'^sigma_test_gexf/$', 'apps.qp.views.sigma_test_gexf', name='sigma_test_gexf'),
-    # url(r'^raffle_countdown_test/$', 'apps.qp.views.raffle_countdown_test', name='raffle_countdown_test'),
-
-
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
@@ -48,4 +39,10 @@ urlpatterns = patterns('',
 
 
 if settings.DEBUG: #only in development!!
-	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += patterns(url(r'^list/$', 'apps.qp.views.list', name='list'))
+    urlpatterns += patterns(url(r'^countdown_test/$', 'apps.qp.views.test_countdown', name='countdown_test'))
+    urlpatterns += patterns(url(r'^sigma_test/$', 'apps.qp.views.sigma_test', name='sigma_test'))
+    urlpatterns += patterns(url(r'^sigma_test_json/$', 'apps.qp.views.sigma_test_json', name='sigma_test_json'))
+    urlpatterns += patterns(url(r'^sigma_test_gexf/$', 'apps.qp.views.sigma_test_gexf', name='sigma_test_gexf'))
+    urlpatterns += patterns(url(r'^raffle_countdown_test/$', 'apps.qp.views.raffle_countdown_test', name='raffle_countdown_test'))
