@@ -433,3 +433,5 @@ def ticket_id(request, ticket_id):
     else:
         return HttpResponseRedirect(t.raffle.target_url)
 
+def zeroclicktest(request):
+    return render(request, 'zeroclicktest.html')

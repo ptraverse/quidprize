@@ -36,7 +36,11 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
+    #only in dev
+    url(r'^zeroclicktest/$','apps.qp.views.zeroclicktest'),
 )
+
 
 
 if settings.DEBUG: #only in development!!
@@ -47,3 +51,4 @@ if settings.DEBUG: #only in development!!
     urlpatterns += patterns(url(r'^sigma_test_json/$', 'apps.qp.views.sigma_test_json', name='sigma_test_json'))
     urlpatterns += patterns(url(r'^sigma_test_gexf/$', 'apps.qp.views.sigma_test_gexf', name='sigma_test_gexf'))
     urlpatterns += patterns(url(r'^raffle_countdown_test/$', 'apps.qp.views.raffle_countdown_test', name='raffle_countdown_test'))
+

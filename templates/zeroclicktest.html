@@ -1,0 +1,36 @@
+<html>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script type="text/javascript" src="/static/js/jquery.zclip.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('a#copy-description').zclip({
+		path:'/static/js/ZeroClipboard.swf',
+		copy:$('p#description').text()
+	});
+	// The link with ID "copy-description" will copy
+	// the text of the paragraph with ID "description"
+	$('a#copy-dynamic').zclip({
+		path:'/static/js/ZeroClipboard.swf',
+		copy:function(){return $('input#dynamic').val();}
+	});
+	// The link with ID "copy-dynamic" will copy the current value
+	// of a dynamically changing input with the ID "dynamic"
+
+	// Resize the clickable region
+	$('embed#ZeroClipboardMovie_1').attr('width','60');
+	$('embed#ZeroClipboardMovie_1').attr('height','60');
+	$('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=60&height=60');
+	$('embed#ZeroClipboardMovie_1').attr('style','"padding-top:none;padding-left:none;"');
+});
+</script>
+
+<body>
+<a id="copy-description" >
+    <img id="image-button" src="/static/images/Editing-Copy-icon.png" style="height: 50px;top: 40px;position:relative;">
+
+</a>
+
+<p id="description" style="visibility:hidden;">FOotextdescription</p>
+</body>
+</html>
