@@ -1,7 +1,6 @@
 <html>
 <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
 <script type="text/javascript" src="/static/js/jquery.zclip.min.js"></script>
-
 <script type="text/javascript">
 $(document).ready(function(){
 	$('a#copy-description').zclip({
@@ -18,19 +17,39 @@ $(document).ready(function(){
 	// of a dynamically changing input with the ID "dynamic"
 
 	// Resize the clickable region
-	$('embed#ZeroClipboardMovie_1').attr('width','60');
-	$('embed#ZeroClipboardMovie_1').attr('height','60');
-	$('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=60&height=60');
+	$('embed#ZeroClipboardMovie_1').attr('width','72');
+	$('embed#ZeroClipboardMovie_1').attr('height','72');
+	$('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=72&height=72');
 	$('embed#ZeroClipboardMovie_1').attr('style','"padding-top:none;padding-left:none;"');
 });
 </script>
 
 <body>
-<a id="copy-description" >
-    <img id="image-button" src="/static/images/Editing-Copy-icon.png" style="height: 50px;top: 40px;position:relative;">
 
+
+<input id="dynamic" type="hidden" value="">
+<a id="copy-dynamic" >
+    <img id="image-button" src="/static/images/Editing-Copy-icon.png" style="height: 50px;top: 40px;position:relative; padding-right: 10px;">
 </a>
 
-<p id="description" style="visibility:hidden;">FOotextdescription</p>
+<a id="tw_link" href="#" >
+    <img id="image-button" src="/static/images/twitter-icon.png" style="height: 50px;top: 40px;position:relative;">
+</a>
+
+<a id="fb_link" href="#" >
+    <img id="image-button" src="/static/images/facebook-icon.png" style="height: 50px;top: 40px;position:relative;">
+</a>
+
+<a id="li_link" href="#" >
+    <img id="image-button" src="/static/images/linkedin-icon.png" style="height: 50px;top: 40px;position:relative;">
+</a>
+
+
+<a id="pt_link" href="#" >
+    <img id="image-button" src="/static/images/pinterest-icon.png" style="height: 50px;top: 40px;position:relative;">
+</a>
+
+
+
 </body>
 </html>
