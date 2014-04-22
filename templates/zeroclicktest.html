@@ -1,8 +1,10 @@
-<html>
-<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
-<script type="text/javascript" src="/static/js/jquery.zclip.min.js"></script>
+{% include "base.html" %}
+{% load widget_tweaks %}
+
 <script type="text/javascript">
 $(document).ready(function(){
+    alert(typeof jQuery().zclip);
+
 	$('a#copy-description').zclip({
 		path:'/static/js/ZeroClipboard.swf',
 		copy:$('p#description').text()
@@ -26,27 +28,50 @@ $(document).ready(function(){
 
 <body>
 
+<style>
+    .barlink {
+        display: inline;
+    }
 
+    .barimg {
+        display: inline;
+        border-bottom: 2px solid white;
+    }
+
+    .barimg:hover {
+     /*   border-bottom: 2px solid black; */
+    }
+
+</style>
+
+
+
+<div class="barlink">
 <input id="dynamic" type="hidden" value="">
 <a id="copy-dynamic" >
-    <img id="image-button" src="/static/images/Editing-Copy-icon.png" style="height: 50px;top: 40px;position:relative; padding-right: 10px;">
+    <img class="barimg" id="image-button" src="/static/images/Editing-Copy-icon.png" style="height: 50px;top: 40px;position:relative; padding-right: 10px;">
 </a>
+</div>
 
+<div class="barlink">
 <a id="tw_link" href="#" >
-    <img id="image-button" src="/static/images/twitter-icon.png" style="height: 50px;top: 40px;position:relative;">
+    <img class="barimg" id="tw-button" src="/static/images/twitter-icon.png" style="height: 50px;top: 40px;position:relative;">
 </a>
+</div>
 
+<div class="barlink">
 <a id="fb_link" href="#" >
-    <img id="image-button" src="/static/images/facebook-icon.png" style="height: 50px;top: 40px;position:relative;">
+    <img class="barimg" id="fb-button" src="/static/images/facebook-icon.png" style="height: 50px;top: 40px;position:relative;">
 </a>
+</div>
 
 <a id="li_link" href="#" >
-    <img id="image-button" src="/static/images/linkedin-icon.png" style="height: 50px;top: 40px;position:relative;">
+    <img class="barimg" id="li-button" src="/static/images/linkedin-icon.png" style="height: 50px;top: 40px;position:relative;">
 </a>
 
 
 <a id="pt_link" href="#" >
-    <img id="image-button" src="/static/images/pinterest-icon.png" style="height: 50px;top: 40px;position:relative;">
+    <img class="barimg" id="pt-button" src="/static/images/pinterest-icon.png" style="height: 50px;top: 40px;position:relative;">
 </a>
 
 

@@ -266,7 +266,8 @@ def sigma_gexf(request, ticket_hash):
         n = graph.addNode(t.id,t.hash)
         n.addAttribute(0,str(coords[i][0]))
         n.addAttribute(1,str(coords[i][1]))
-        n.addAttribute(2,t.hash)
+        #n.addAttribute(2,t.hash)
+        n.addAttribute(2,'')
         cs = t.completion_count()
         n.addAttribute(3,str(cs))
     for t in tl:

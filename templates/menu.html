@@ -1,6 +1,5 @@
-{% include "base.html" %}
-
 <script type="text/javascript">
+
     var email = '{{ request.user.email }}';
     var ar=email.split('@');
     var short_email = new String(ar[0]);

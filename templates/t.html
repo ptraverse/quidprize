@@ -1,9 +1,41 @@
 {% include "base.html" %}
 {% load widget_tweaks %}
 
-<script>
+<script type="text/javascript">
+    $(document).ready(function(){
 
-    $('#redirect_div').ready(function() {
+        sigma.parsers.gexf('../sigma_gexf/{{ ticket.hash }}/', {
+            // Here is the ID of the DOM element that
+            // will contain the graph:
+            container: 'sigma-container',
+            settings: {
+                defaultNodeColor: '#C0C0C0',
+                doubleClickEnabled: false,
+                mouseEnabled: false
+            }
+        }, function(s) {
+            var i=0;
+            s.graph.nodes().forEach(function(n) {
+                n.x = n['attributes']['xcoord'];
+                n.y = n['attributes']['ycoord'];
+                n.label = n['attributes']['label'];
+                n.size = 3;
+                {% if ticket %}
+                if ( n.label=="{{ ticket.hash }}" )
+                {
+                    n.color = '#000000';
+                }
+                {% endif %}
+                i++;
+            });
+            s.bind('downnodes', function onClick(event) {
+                console.log(" on clicked" );
+            });
+            s.refresh();
+        }
+
+        );
+
 
         $("#ajax_ticket_activation_button").click(function() {
             var input_string = $("#id_activation_email").val();
@@ -29,11 +61,22 @@
                         {
                             $('#id_response_message').html('This email already has a shortlink:<br><br>');
                         }
-                        $('#id_response_message').append('<a href="http://bit.ly/'+json.hash+'">http://bt.ly/'+json.hash+'</a>');
+                        $('#id_response_message').append('<a href="http://bit.ly/'+json.hash+'">    http://bit.ly/'+json.hash+'</a>');
                         if (json.status=='existing')
                         {
                             $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
                         }
+
+                        $('input#dynamic').val('http://bit.ly/'+json.hash);
+                        $('div#easylinkbar').css('display','block');
+                        $('a#copy-dynamic').zclip({
+                            path:'/static/js/ZeroClipboard.swf',
+                            copy:function(){return $('input#dynamic').val();}
+                        });
+                        $('embed#ZeroClipboardMovie_1').attr('width','72');
+                        $('embed#ZeroClipboardMovie_1').attr('height','72');
+                        $('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=72&height=72');
+                        $('embed#ZeroClipboardMovie_1').attr('style','"padding-top:none;padding-left:none;"');
                     },
                     error : function(xhr,errmsg,err) {
                         alert(xhr.status + ": " + xhr.responseText);
@@ -47,27 +90,13 @@
             return false;
         });
 
-        {% if settings.DEBUG %}
-            //defaultstart();
-        {% else %}
-            //defaultstart();
-        {% endif %}
+        defaultstart();
 
         $( "#content" ).one( "click", function() {
             click_content();
         });
 
-         $( "#legal_dialog" ).dialog({
-            autoOpen: false,
-         });
-
-         $( "#terms" ).click(function() {
-            $( "#legal_dialog" ).dialog( "open" );
-         });
-
     });
-
-
 
 
     var time_left = 10;
@@ -216,6 +245,8 @@
 
 </script>
 
+
+
 <style type="text/css">
     .redirect_div {
         cursor:pointer;
@@ -225,11 +256,11 @@
         width: 100%;
         height: 10%;
         }
-    .redirect_div:hover {background-color:#FAFAFA;}
+    .redirect_div:hover { /* background-color:#FAFAFA; */ }
 
     .content {cursor: pointer;
         height: 80%;}
-    .content:hover { background-color:#FAFAFA;}
+    .content:hover { /* background-color:#FAFAFA; */ }
 
     .id_response_div { height: 20%;  }
     .id_loading_div {display: none;}
@@ -241,7 +272,7 @@
 {% else %}
     {% include "menu_alternate.html" %}
 {% endif %}
-
+<body>
 
 <div class="redirect_div" id="redirect_div" onclick="completion();" >
     <a class="content-subhead">Redirecting to
@@ -267,9 +298,9 @@
                     <h4>How To Win:</h4>
                         <ol>
                         <li>Enter your email
-                        <li>Use your shortlink to get clicks
-                        <li>Increase your chances of winning with each click you get!
-                        <li>Get rewarded for downline links and their clicks too!
+                        <li>Use your shortlink to spread this link around
+                        <li>Increase your chances of winning with each click you get
+                        <li>Get rewarded for downline users and their clicks too!
                         </ol>
                         <center><a href="/legal/">Terms and Conditions</a></center>
                     </legend>
@@ -296,6 +327,10 @@
             </div>
             <div id="id_response_url" class="id_response_url">
             </div>
+
+            <div id="easylinkbar" class="easylinkbar" style="display: none;">
+            {% include "easylinkbar.html" %}
+            </div>
         </div>
     </center>
 
@@ -306,3 +341,5 @@
 
 </div>
 
+</body>
+        </html>
