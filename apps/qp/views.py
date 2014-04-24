@@ -264,8 +264,7 @@ def sigma_gexf(request, ticket_hash):
         n = graph.addNode(t.id,t.hash)
         n.addAttribute(0,str(coords[i][0]))
         n.addAttribute(1,str(coords[i][1]))
-        #n.addAttribute(2,t.hash)
-        n.addAttribute(2,'')
+        n.addAttribute(2,t.hash)
         cs = t.completion_count()
         n.addAttribute(3,str(cs))
     for t in tl:
@@ -362,12 +361,8 @@ def tickets(request):
             print tl
         except Ticket.DoesNotExist:
             m = m + 'You need to get some tickets activated to participate in quidprize'
-        API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
-        API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
-        ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
-        Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
         for ticket in tl:
-            ticket.num_clicks = Bitly.link_clicks(link='http://bit.ly/'+ticket.hash)
+            ticket.num_clicks = ticket.get_num_clicks()
     else:
         return render(request, '500.html', {'message':'you need to login to use this page'})
     return render(request, 'you.html', {'ticketlist':tl, 'message':m} )
@@ -391,7 +386,7 @@ def ticket_activation_json(request,raffle_id):
     if request.POST.has_key('client_response'):
         try:
             ticket = Ticket.objects.get(raffle=raffle_id,activation_email=request.POST.get('client_response'))
-            url = 'http://bit.ly/'+ticket.hash
+            url = 'http://ow.ly/'+ticket.hash
             status = 'existing'
             print "ticket activattion email already has ticket"
         except Ticket.DoesNotExist:
@@ -401,20 +396,16 @@ def ticket_activation_json(request,raffle_id):
                 user = User.objects.get(email=ticket.activation_email)
             except User.DoesNotExist:
                 user = User.objects.create(username=ticket.activation_email,email=ticket.activation_email)
-            API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
-            API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
-            ACCESS_TOKEN = "1214d30c74adf88608b83bdc8eac7b053a57b6f4"
-            bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
-            print "connecting to bitly to get a new shortlink"
             tid_url = 'http://' + request.get_host()
             tid_url = tid_url + '/t/'
             tid_url = tid_url + str(ticket.id)
-            response = bitly.shorten(tid_url)
-            ticket.hash = response['hash']
+            Owly = owly_api.Owly()
+            response = Owly.url_shorten(tid_url)
+            ticket.hash = response['results']['hash']
             pt = Ticket.objects.get(id=request.POST.get('parent_ticket_id'))
             ticket.parent_ticket = pt
             ticket.save()
-            url = response['url']
+            url = response['results']['shortUrl']
             status = 'new'
         except Ticket.MultipleObjectsReturned:
             return render(request, '500.html', { 'message':'Multiple Objects Returned!'})

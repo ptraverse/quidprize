@@ -3,8 +3,10 @@ from django.contrib.auth.models import *
 import os.path
 from datetime import datetime
 import bitly_api
+import owly_api
 import simplejson
 import igraph
+import urllib2
 
 API_USER = "cfd992841301aabcd843e8ed4622b9c88e320e8e"
 API_KEY = "c5955c440b750b215924bd08d1b79518ca4a82c4"
@@ -102,6 +104,17 @@ class TicketManager(models.Manager):
             response = bitly.shorten(tid_url)
             t.hash = response['hash']
             t.save()
+        ## changing from Bit.ly to ow.ly
+        # else:
+        #     t = self.create(raffle=raffle,is_root_ticket=False,parent_ticket=parent_ticket)
+        #     tid_url = 'http://10.0.1.14:8000/' # TODO - make this the current host url
+        #     tid_url = tid_url + '/t/'
+        #     tid_url = tid_url + str(t.id)
+        #     Owly = owly_api.Owly()
+        #     response = Owly.url_shorten(tid_url)
+        #     print response
+        #     t.hash = response['hash']
+        #     t.save()
         return t
 
 class Ticket(models.Model):
@@ -121,8 +134,19 @@ class Ticket(models.Model):
         elif self.is_root_ticket==True:
             return 0 # for now
         else:
-            Bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
-            return Bitly.link_clicks(link='http://bit.ly/'+self.hash)
+            Owly = owly_api.Owly()
+            shortUrl = "http://ow.ly/"+self.hash
+            try:
+                response = Owly.url_clickStats(shortUrl)
+            except urllib2.HTTPError, err:
+               if err.code == 404:
+                   return 0
+               else:
+                   raise
+            total_clicks = 0
+            for day in response['results']:
+                total_clicks = total_clicks+day['clickCount']
+            return total_clicks
     def calculate_height(self):
         try:
             subs = Ticket.objects.get(raffle=self.raffle, parent_ticket = self)

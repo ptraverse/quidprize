@@ -1,6 +1,6 @@
 # ## Owly API Test
-# # import owly_api
-# #
+import owly_api
+#
 # # Owly = owly_api.Owly()
 # # Owly.test_url_shorten()
 # # Owly.url_shorten("http://foo.com")
@@ -89,3 +89,7 @@
 #from apps.qp.models import *
 #r = Raffle.objects.get(id=58)
 #r.graph()
+
+
+Owly = owly_api.Owly()
+Owly.test_url_clickStats()

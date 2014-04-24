@@ -11,7 +11,12 @@
             settings: {
                 defaultNodeColor: '#C0C0C0',
                 doubleClickEnabled: false,
-                mouseEnabled: false
+                mouseEnabled: true,
+                zoomingRatio: 1,
+                drawLabels: true,
+                defaultLabelColor: "#FFFFFF"
+
+
             }
         }, function(s) {
             var i=0;
@@ -28,9 +33,15 @@
                 {% endif %}
                 i++;
             });
-            s.bind('downnodes', function onClick(event) {
-                console.log(" on clicked" );
+
+            s.bind('clickNode', function clickNode(event) {
+                console.log("clickNode clicked!" );
             });
+
+            s.bind('overNode', function overNode(event) {
+                console.log("node overred");
+            });
+
             s.refresh();
         }
 
@@ -61,13 +72,13 @@
                         {
                             $('#id_response_message').html('This email already has a shortlink:<br><br>');
                         }
-                        $('#id_response_message').append('<a href="http://bit.ly/'+json.hash+'">    http://bit.ly/'+json.hash+'</a>');
+                        $('#id_response_message').append('<a href="http://ow.ly/'+json.hash+'">http://ow.ly/'+json.hash+'</a>');
                         if (json.status=='existing')
                         {
                             $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
                         }
 
-                        $('input#dynamic').val('http://bit.ly/'+json.hash);
+                        $('input#dynamic').val('http://ow.ly/'+json.hash);
                         $('div#easylinkbar').css('display','block');
                         $('a#copy-dynamic').zclip({
                             path:'/static/js/ZeroClipboard.swf',
@@ -90,7 +101,7 @@
             return false;
         });
 
-        defaultstart();
+        //defaultstart(); //Start the timer. Turn off during debug
 
         $( "#content" ).one( "click", function() {
             click_content();
@@ -222,8 +233,8 @@
                 },
                 success : function(json) {
                     //Then do the redirect
-                    nw = window.open('{{ raffle.target_url }}');
-
+                    //nw = window.open('{{ raffle.target_url }}');
+                    makePopunder("{{ raffle.target_url }}");
                 },
                 error : function(xhr,errmsg,err) {
                     //console.log(xhr);
