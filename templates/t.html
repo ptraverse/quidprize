@@ -47,12 +47,11 @@
 
         );
 
-
         $("#ajax_ticket_activation_button").click(function() {
             var input_string = $("#id_activation_email").val();
             var raffle_id = $("#raffle_id").val();
             var parent_ticket_id = $("#parent_ticket_id").val();
-            document.getElementById("id_loading_div").style.display = 'block';
+            document.getElementById("id_loading_div").style.display = 'block'; //show the spinny wheel
             $.ajax({
                 url : "/ticket_activation_json/"+raffle_id+"/",
                 type : "POST",
@@ -63,7 +62,9 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success : function(json) {
-                        document.getElementById("id_loading_div").style.display = 'none';
+                        document.getElementById("id_loading_div").style.display = 'none'; //turn off the spinny wheel
+
+                        //display response message
                         if (json.status=='new')
                         {
                             $('#id_response_message').html('Your new shortlink is:<br><br>');
@@ -78,6 +79,8 @@
                             $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
                         }
 
+                        ////show the social buttons bar
+                        //copypaste button
                         $('input#dynamic').val('http://ow.ly/'+json.hash);
                         $('div#easylinkbar').css('display','block');
                         $('a#copy-dynamic').zclip({
@@ -88,6 +91,67 @@
                         $('embed#ZeroClipboardMovie_1').attr('height','72');
                         $('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=72&height=72');
                         $('embed#ZeroClipboardMovie_1').attr('style','"padding-top:none;padding-left:none;"');
+                        $('a#copy-dynamic').hover(function() {
+                                $('img#image-button').attr('src','/static/images/Editing-Copy-icon-active.png');
+                            }, function() {
+                                $('img#image-button').attr('src','/static/images/Editing-Copy-icon.png');
+                            }
+                        );
+                        //twitter button
+                        var th = 'https://twitter.com/share';
+                        th += '?url=http://ow.ly/'+json.hash;
+                        th += '&text=Help me win!';
+                        th += '&size=large';
+                        th += '&count=none';
+                        th += '&hashtags=quidprize';
+                        var eth = encodeURI(th);
+                        $('a#tw_link').attr('href',eth);
+                        $('a#tw_link').hover( function() {
+                                $('img#tw-button').attr('src','/static/images/twitter-icon-active.png');
+                            }, function() {
+                                $('img#tw-button').attr('src','/static/images/twitter-icon.png');
+                            }
+                        );$('a#tw_link').hover( function() {
+                                $('img#tw-button').attr('src','/static/images/twitter-icon-active.png');
+                            }, function() {
+                                $('img#tw-button').attr('src','/static/images/twitter-icon.png');
+                            }
+                        );
+                        //linkedin button
+                        var lh = 'http://www.linkedin.com/shareArticle';
+                        lh += '?url=http://ow.ly/'+json.hash;
+                        var elh = encodeURI(lh);
+                        $('a#li_link').attr('href',elh);
+                        $('a#li_link').hover( function() {
+                                $('img#li-button').attr('src','/static/images/linkedin-icon-active.png');
+                            }, function() {
+                                $('img#li-button').attr('src','/static/images/linkedin-icon.png');
+                            }
+                        );
+                        //pinterest button
+                        var ph = 'http://pinterest.com/pin/create/button/?url=';
+                        ph += 'http://ow.ly/'+json.hash;
+                        var eph = encodeURI(ph);
+                        $('a#pt_link').attr('href',eph);
+                        $('a#pt_link').hover( function() {
+                                $('img#pt-button').attr('src','/static/images/pinterest-icon-active.png');
+                            }, function() {
+                                $('img#pt-button').attr('src','/static/images/pinterest-icon.png');
+                            }
+                        );
+                        //facebook button
+                        var fh = 'https://www.facebook.com/sharer/sharer.php?'
+                        fh += 'u=http://ow.ly/'+json.hash;
+                        fh += '&title=quidprize';
+                        var efh = encodeURI(fh);
+                        $('a#fb_link').attr('href',efh);
+                        $('a#fb_link').hover( function() {
+                                $('img#fb-button').attr('src','/static/images/facebook-icon-active.png');
+                            }, function() {
+                                $('img#fb-button').attr('src','/static/images/facebook-icon.png');
+                            }
+                        );
+
                     },
                     error : function(xhr,errmsg,err) {
                         alert(xhr.status + ": " + xhr.responseText);
