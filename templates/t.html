@@ -13,7 +13,7 @@
                 doubleClickEnabled: false,
                 mouseEnabled: true,
                 zoomingRatio: 1,
-                drawLabels: true,
+                drawLabels: false,
                 defaultLabelColor: "#FFFFFF"
 
 
@@ -51,6 +51,7 @@
             var input_string = $("#id_activation_email").val();
             var raffle_id = $("#raffle_id").val();
             var parent_ticket_id = $("#parent_ticket_id").val();
+            $("#id_response_div").modal();
             document.getElementById("id_loading_div").style.display = 'block'; //show the spinny wheel
             $.ajax({
                 url : "/ticket_activation_json/"+raffle_id+"/",
@@ -63,21 +64,25 @@
                     },
                     success : function(json) {
                         document.getElementById("id_loading_div").style.display = 'none'; //turn off the spinny wheel
-
+                        $('#id_response_message').html('');
+                        $('#id_response_message').append('<h1>Thanks for participating!</h1>');
                         //display response message
                         if (json.status=='new')
                         {
-                            $('#id_response_message').html('Your new shortlink is:<br><br>');
+                            $('#id_response_message').append('Your new shortlink is:<br><br>');
                         }
                         else if (json.status=='existing')
                         {
-                            $('#id_response_message').html('This email already has a shortlink:<br><br>');
+                            $('#id_response_message').append('This email already has a shortlink:<br><br>');
                         }
                         $('#id_response_message').append('<a href="http://ow.ly/'+json.hash+'">http://ow.ly/'+json.hash+'</a>');
                         if (json.status=='existing')
                         {
                             $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
                         }
+                        $('#id_response_message2').html('');
+                        $('#id_response_message2').append('Every click through via this link will add another free entry under the registered email address.<br> Spread the word to win the prize!');
+                        $('#id_response_terms').css('display','block');
 
                         ////show the social buttons bar
                         //copypaste button
@@ -375,7 +380,7 @@
                         <li>Enter your email
                         <li>Use your shortlink to spread this link around
                         <li>Increase your chances of winning with each click you get
-                        <li>Get rewarded for downline users and their clicks too!
+                        <!--<li>Get rewarded for downline users and their clicks too!-->
                         </ol>
                         <center><a href="/legal/">Terms and Conditions</a></center>
                     </legend>
@@ -393,19 +398,29 @@
     {% endif %}
 
     <center>
-        <div id="id_response_div" style="padding-top:20px; height: 150px;">
+        <div id="id_response_div" style="padding-top:20px; height: 92%; background-color: white;display:none;vertical-align:middle;">
 
-            <div id="id_loading_div" style="display: none; padding-top: 40px; ">
+            <center>
+            <div id="id_loading_div" style="display: none; padding-top: 100px; ">
                 <img src="/static/images/1-0.gif" />
             </div>
-            <div id="id_response_message" class="id_response_message">
+            <div id="id_response_message" class="id_response_message" >
             </div>
+
             <div id="id_response_url" class="id_response_url">
             </div>
 
-            <div id="easylinkbar" class="easylinkbar" style="display: none;">
+            <div id="easylinkbar" class="easylinkbar" style="display: none;margin-bottom: 65px;">
             {% include "easylinkbar.html" %}
             </div>
+
+            <div id="id_response_message2" class="id_response_message2" style="width: 60%; display: block;">
+            </div>
+
+            <!--<div id="id_response_terms" class="id_response_terms" style="display: block; font-size: small;display:none;bottom: 8px; position: absolute; padding-left: auto; padding-right: auto; width:92%; ">-->
+                                <!--<a href="/legal/" target="_blank">Terms and Conditions</a>-->
+            </div>
+            </center>
         </div>
     </center>
 
