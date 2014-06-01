@@ -1,6 +1,6 @@
 SECRET_KEY = 'QUIDasdfasdfasdfasdfPRIZE'
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['.quidprize.com']

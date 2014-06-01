@@ -51,6 +51,23 @@ def beta_new_raffle(request):
         brf = BetaRaffleForm()
         return render(request,'beta_raffle.html',{'betaraffleform':brf})
 
+@login_required
+def beta_new_raffle_2(request):
+    if request.method == 'POST': # If the form has been submitted...
+        brf2 = BetaRaffleForm2(request.POST) # A form bound to the POST data
+        if brf2.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+            #use logger
+            r = brf2.save(commit=False)
+            return HttpResponseRedirect('/thanks/') # Redirect after POST
+        else:
+            print brf.errors
+            return render(request,'beta_raffle_2.html',{'betaraffleform2':brf2})
+    else:
+        brf = BetaRaffleForm()
+        return render(request,'beta_raffle.html',{'betaraffleform':brf})
+
 
 def business_create(request):
     if request.method == 'POST': # If the form has been submitted...

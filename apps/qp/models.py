@@ -40,8 +40,11 @@ class Raffle(models.Model):
     expiry_date = models.DateTimeField()
     draw_winner = models.ForeignKey(User, null=True, blank=True)
     draw_date = models.DateTimeField(null=True)
+    logo_upload = models.FileField(upload_to='logos/')
+    status = models.CharField(max_length="64",default="pending")
+
     def __unicode__(self):
-        return '100$ gift card to whoever gets as many clicks to '+self.target_url+' for '+self.business.name
+        return 'Raffle to send traffic to '+self.target_url+' for '+self.business.name
     def draw(self):
         ticketlist = Ticket.objects.filter(raffle = self.id)
         total_clicks1 = 0

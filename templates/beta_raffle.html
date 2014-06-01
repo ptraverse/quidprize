@@ -8,29 +8,42 @@
 <script type="text/javascript">
 
     $(document).ready( function() {
-        console.log("foo");
+
         $('#id_expiry_date').datetimepicker({
             format: "Y-m-d H:i:s"
         });
-        console.log("bar");
+
+        $('#id_logo_upload').click( function(event) {
+            $('#hidden_file_upload').click();
+            console.log("clickcked");
+        });
+
+        $('#hidden_file_upload').change(function (click){
+            console.log("asdffclick");
+            $('#id_logo_upload').val(this.value);
+        });
     });
 
 </script>
 
 {% if betaraffleform %}
       <center>
-        <form method="POST" action="/beta_new_raffle/" class="pure-form" style="text-align: center;" >{% csrf_token %}
+        <form method="POST" action="/beta_new_raffle/2/" class="pure-form" style="text-align: center; padding-top: 100px;" >{% csrf_token %}
         <fieldset class="pure-group">
             <center>
-            <legend class="pure-legend" >Create Raffle</legend>
+            <legend class="pure-legend">1. Create Raffle</legend>
             {{ betaraffleform.target_url|attr:"class:pure-input-1-4"|attr:"placeholder:Target URL" }} {{ betaraffleform.target_url.errors }}
             {{ betaraffleform.expiry_date|attr:"class:pure-input-1-4 id_expiry_date"|attr:"placeholder:Expiry Date" }} {{ betaraffleform.expiry_date.errors }}
-            {{ betaraffleform.contact_name|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Name" }} {{ betaraffleform.contact_name.errors }}
-            {{ betaraffleform.contact_phone|attr:"class:pure-input-1-4"|attr:"placeholder:Contact Number" }} {{ betaraffleform.contact_phone.errors }}
-            {{ betaraffleform.business|attr:"class:pure-input-1-4"|attr:"value:1"|attr:"style:display:none;" }}
+           <div id="logo_upload_div">
+                <input type="text" class="pure-input-1-4 id_logo_upload" name="id_logo_upload" placeholder="Raffle Image/Logo" id="id_logo_upload">
+               <input type="file"  style="display: none;" id="hidden_file_upload">
+           </div>
+
+
+
             </center>
         </fieldset>
-         <button type="submit" class="pure-button pure-input-1-4 ">Create Raffle</button>
+         <button type="submit" class="pure-button pure-input-1-4 ">Next</button>
         </form>
 
       </center>

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
     url(r'^b/(.*)$', 'apps.qp.views.business'),
     url(r'^beta_new_raffle/$', 'apps.qp.views.beta_new_raffle'),
+    url(r'^beta_new_raffle/2/$', 'apps.qp.views.beta_new_raffle_2'),
     url(r'^business_create/$', 'apps.qp.views.business_create'),
     url(r'^completion_logger/$', 'apps.qp.views.completion_logger'),
     url(r'^legal/$','apps.qp.views.legal'),
